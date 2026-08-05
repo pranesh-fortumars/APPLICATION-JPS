@@ -2,15 +2,18 @@
 
 import Image from "next/image";
 import { Product } from "@/lib/mockData";
-import { ShoppingBag, Eye } from "lucide-react";
+import { ShoppingBag, Eye, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useCartStore } from "@/store/cartStore";
 
 interface ProductCardProps {
   product: Product;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const { addItem } = useCartStore();
+
   // Use the WhatsApp link for enquiries
   const whatsappUrl = `https://wa.me/918939695455?text=${encodeURIComponent(
     `Hello, I'm interested in this fabric: ${product.name} (Code: ${product.id}). Please share more details.`
@@ -55,18 +58,27 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Quick Actions Overlay */}
-        <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out bg-gradient-to-t from-dark/80 to-transparent flex gap-2 justify-center z-20">
-          <Link 
-            href={whatsappUrl} 
-            target="_blank"
-            className="flex items-center gap-2 bg-white text-dark px-4 py-3 font-medium text-xs uppercase tracking-wider hover:bg-accent hover:text-white transition-colors flex-1 justify-center"
+        <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out bg-gradient-to-t from-dark/80 to-transparent flex flex-col gap-2 justify-center z-20">
+          <button 
+            onClick={(e) => { e.preventDefault(); addItem({ product, quantity: 1 }); }}
+            className="flex items-center gap-2 bg-dark text-white px-4 py-3 font-medium text-xs uppercase tracking-wider hover:bg-primary transition-colors justify-center w-full shadow-lg"
           >
             <ShoppingBag size={14} />
-            Enquire
-          </Link>
-          <button className="flex items-center justify-center bg-dark text-white px-4 py-3 hover:bg-primary transition-colors">
-            <Eye size={16} />
+            Add to Cart
           </button>
+          <div className="flex gap-2">
+            <Link 
+              href={whatsappUrl} 
+              target="_blank"
+              className="flex items-center gap-2 bg-[#25D366] text-white px-4 py-3 font-medium text-xs uppercase tracking-wider hover:bg-[#20bd5a] transition-colors flex-1 justify-center"
+            >
+              <MessageCircle size={14} />
+              WhatsApp
+            </Link>
+            <button className="flex items-center justify-center bg-white text-dark px-4 py-3 hover:bg-accent hover:text-white transition-colors">
+              <Eye size={16} />
+            </button>
+          </div>
         </div>
       </div>
 

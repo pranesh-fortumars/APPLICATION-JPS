@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
+import MiniCart from "@/components/MiniCart";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -34,6 +35,7 @@ export default function RootLayout({
           {children}
         </SmoothScroll>
         <FloatingWhatsApp />
+        <MiniCart />
       </body>
     </html>
   );

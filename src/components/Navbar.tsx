@@ -3,14 +3,16 @@
 import { useState, useEffect } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import Link from "next/link";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X, Search, ShoppingBag } from "lucide-react";
 import SmartSearch from "@/components/SmartSearch";
+import { useCartStore } from "@/store/cartStore";
 
 export default function Navbar() {
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { toggleCart, totalItems } = useCartStore();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50);
@@ -64,6 +66,19 @@ export default function Navbar() {
           >
             <Search size={20} />
           </button>
+          
+          <button 
+            onClick={toggleCart}
+            className="relative text-foreground hover:text-accent transition-colors"
+          >
+            <ShoppingBag size={20} />
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                {totalItems}
+              </span>
+            )}
+          </button>
+
           <Link
             href="https://wa.me/918939695455"
             target="_blank"
@@ -77,6 +92,14 @@ export default function Navbar() {
         <div className="lg:hidden flex items-center gap-4 text-foreground">
           <button onClick={() => setIsSearchOpen(true)}>
             <Search size={24} />
+          </button>
+          <button onClick={toggleCart} className="relative">
+            <ShoppingBag size={24} />
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                {totalItems}
+              </span>
+            )}
           </button>
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
