@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
+import SmartSearch from "@/components/SmartSearch";
 
 export default function Navbar() {
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50);
@@ -54,8 +56,14 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Action Button */}
-        <div className="hidden lg:flex">
+        {/* Action Buttons */}
+        <div className="hidden lg:flex items-center gap-6">
+          <button 
+            onClick={() => setIsSearchOpen(true)}
+            className="text-foreground hover:text-accent transition-colors"
+          >
+            <Search size={20} />
+          </button>
           <Link
             href="https://wa.me/918939695455"
             target="_blank"
@@ -65,14 +73,19 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <button
-          className="lg:hidden text-foreground"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
+        {/* Mobile Actions Toggle */}
+        <div className="lg:hidden flex items-center gap-4 text-foreground">
+          <button onClick={() => setIsSearchOpen(true)}>
+            <Search size={24} />
+          </button>
+          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
       </div>
+
+      {/* Smart Search Overlay */}
+      <SmartSearch isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
       {/* Mobile Menu (Simplified) */}
       {isMobileMenuOpen && (
