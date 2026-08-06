@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>JPS Fabrics - Premium Luxury Boutique</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Montserrat:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#34302c",
+                        "tertiary": "#0f0f0c",
+                        "on-primary-container": "#cc726d",
+                        "on-background": "#1e1b18",
+                        "primary-container": "#4a0e0e",
+                        "on-primary-fixed-variant": "#77302d",
+                        "primary": "#2a0002",
+                        "on-surface-variant": "#544341",
+                        "primary-fixed": "#ffdad7",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#dac1bf",
+                        "tertiary-container": "#252421",
+                        "inverse-primary": "#ffb3ad",
+                        "surface-bright": "#fff8f5",
+                        "surface": "#fff8f5",
+                        "secondary-fixed": "#ffdea5",
+                        "surface-variant": "#e9e1dc",
+                        "on-primary-fixed": "#3d0506",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#8d8b87",
+                        "tertiary-fixed": "#e6e2dd",
+                        "error": "#ba1a1a",
+                        "on-surface": "#1e1b18",
+                        "on-tertiary-fixed": "#1c1c19",
+                        "secondary-fixed-dim": "#e9c176",
+                        "background": "#fff8f5",
+                        "surface-container-low": "#fbf2ed",
+                        "on-secondary-fixed": "#261900",
+                        "on-secondary-container": "#785a1a",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#775a19",
+                        "surface-dim": "#e1d8d4",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f8efea",
+                        "outline": "#877270",
+                        "primary-fixed-dim": "#ffb3ad",
+                        "tertiary-fixed-dim": "#c9c6c1",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#f5ece7",
+                        "secondary-container": "#fed488",
+                        "on-tertiary-fixed-variant": "#484743",
+                        "surface-container-highest": "#e9e1dc",
+                        "surface-container-high": "#efe6e2",
+                        "surface-tint": "#954742",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "margin-desktop": "80px",
+                        "container-max": "1440px",
+                        "margin-mobile": "20px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Playfair Display"],
+                        "label-sm": ["Montserrat"],
+                        "display-lg": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "body-md": ["Montserrat"],
+                        "body-lg": ["Montserrat"],
+                        "headline-lg-mobile": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["40px", { "lineHeight": "48px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "display-lg": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #fff8f5; color: #1e1b18; }
+        .gold-border-btm { border-bottom: 1px solid #775a19; }
+        .gold-border { border: 1px solid #775a19; }
+        .gold-text { color: #775a19; }
+        .maroon-bg { background-color: #2a0002; }
+        .maroon-text { color: #2a0002; }
+        
+        /* Floral subtle background pattern using CSS radial gradients */
+        .floral-bg-subtle {
+            background-image: radial-gradient(#dac1bf 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .shadow-ambient {
+            box-shadow: 0 20px 40px -10px rgba(42, 0, 2, 0.08);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 1s ease-out forwards;
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .bg-shimmer {
+            background: linear-gradient(-45deg, #fff8f5, #fbf2ed, #efe6e2, #fff8f5);
+            background-size: 400% 400%;
+            animation: shimmer 15s ease infinite;
+        }
+
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .scroll-animate.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .animate-fade-in-up,
+            .animate-float,
+            .bg-shimmer,
+            .scroll-animate {
+                animation: none;
+                transition: none;
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body class="font-body-md antialiased overflow-x-hidden selection:bg-secondary selection:text-white bg-shimmer">
+<!-- TopNavBar from JSON -->
+<nav class="bg-surface/90 dark:bg-primary/90 backdrop-blur-md docked full-width top-0 sticky z-50 border-b border-secondary-container dark:border-primary-container shadow-sm transition-all duration-300 ease-in-out">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 w-full max-w-container-max mx-auto">
+<!-- Mobile Menu Button -->
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+<!-- Links (Hidden on Mobile) -->
+<div class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:text-primary dark:hover:text-secondary-fixed transition-colors font-label-sm uppercase tracking-wider" href="#">Collections</a>
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:text-primary dark:hover:text-secondary-fixed transition-colors font-label-sm uppercase tracking-wider" href="#">About Us</a>
+</div>
+<!-- Logo -->
+<a class="flex items-center justify-center animate-float" href="#">
+<img alt="JPS Fabrics Logo" class="h-16 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuKUnQzCVxt3N3SjyiVicnrnZDZbg6H-kHdoMTgNAB0bqkrsQi8wgmRugHajHZ3NOqyqNUV9VKz1fkqZMvqTzeo1R01FPatgHmvL_-zYKZiOPoNHbCAcpIva8-m4OoVxGPEHhtsf9cfeFCkGXMS2_40O-eqj-BEXA1qYr5-AUfL8aW8fOikluarFm6Y3TRLm_JNxrN_J3UqIuvuChxEDcr5iXgNrk1T6svFUn_LA8hk0hOtmTo_NNIih-Q2xsxTQnoYtc"/>
+</a>
+<!-- Links (Hidden on Mobile) -->
+<div class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:text-primary dark:hover:text-secondary-fixed transition-colors font-label-sm uppercase tracking-wider" href="#">Tailoring</a>
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:text-primary dark:hover:text-secondary-fixed transition-colors font-label-sm uppercase tracking-wider" href="#">Contact</a>
+</div>
+<!-- Trailing Action -->
+<a class="hidden md:inline-flex items-center justify-center px-6 py-2 maroon-bg text-secondary-fixed font-label-sm uppercase tracking-widest gold-border hover:bg-secondary hover:text-primary transition-all duration-300" href="#">
+                Enquire Now
+            </a>
+<!-- Mobile Search Icon (Placeholder for trailing action space) -->
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined text-2xl">search</span>
+</button>
+</div>
+</nav>
+<main>
+<!-- Hero Section -->
+<section class="relative w-full min-h-[80vh] flex items-center justify-center overflow-hidden bg-transparent floral-bg-subtle pt-20 pb-32">
+<!-- Decorative Elements -->
+<div class="absolute top-10 left-10 opacity-20 pointer-events-none">
+<span class="material-symbols-outlined text-6xl gold-text" style="font-variation-settings: 'FILL' 1;">local_florist</span>
+</div>
+<div class="absolute bottom-10 right-10 opacity-20 pointer-events-none">
+<span class="material-symbols-outlined text-8xl maroon-text">auto_awesome</span>
+</div>
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop relative z-10 text-center flex flex-col items-center">
+<p class="font-label-sm text-secondary tracking-[0.2em] uppercase mb-4 animate-fade-in-up" style="animation-delay: 0.2s;">The Premium Boutique</p>
+<h1 class="font-display-lg text-headline-lg-mobile md:text-display-lg text-primary mb-6 max-w-4xl leading-tight animate-fade-in-up" style="animation-delay: 0.4s;">
+<span class="italic font-light">Something New</span><br/>
+                    Is Here
+                </h1>
+<!-- Divider -->
+<div class="flex items-center gap-4 mb-8 animate-fade-in-up" style="animation-delay: 0.6s;">
+<div class="h-px w-16 bg-secondary"></div>
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<div class="h-px w-16 bg-secondary"></div>
+</div>
+<p class="font-body-lg text-on-surface-variant max-w-2xl mb-12 animate-fade-in-up" style="animation-delay: 0.8s;">
+                    Discover our latest collection of premium textiles, meticulously curated for elegance and crafted for perfection. Experience the tactile luxury of JPS Fabrics.
+                </p>
+<a class="inline-flex items-center justify-center px-8 py-4 maroon-bg text-secondary-fixed font-label-sm uppercase tracking-widest gold-border hover:bg-secondary hover:text-primary transition-all duration-300 gap-2 group animate-fade-in-up" href="#" style="animation-delay: 1s;">
+                    Explore Collections
+                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_right_alt</span>
+</a>
+</div>
+</section>
+<!-- Feature / Imagery Section (Bento style inspiration) -->
+<section class="py-24 bg-transparent w-full scroll-animate">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4">A New Journey Begins</h2>
+<p class="font-body-md text-on-surface-variant max-w-xl mx-auto italic">Your support means everything to us.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Large Feature Image -->
+<div class="md:col-span-8 relative rounded-xl overflow-hidden shadow-ambient h-[500px] group">
+<img alt="Premium fabrics stacked elegantly showcasing texture and rich colors" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDix4Rsi-db_BOHMP3NeYTMYBdHe2_ifkUFX7ttaIXKWdtypdRkhuVr588WnyGhWmKBnDq6bpMR4cuGeXIK5R-XLIfZRZkDobnVGnX2I-fxP1FrdzI41A0MJnGz6HE-I4SMKz_-pLvsIMpbH8gPIzNt6IX5_7oVM1DbgAAowS1HY5VE_eVmC13qsCXD_6HbDpTSZar2YtiI68l2tL2ShcYG6gt4OJcY4RJXmkxx482r9hOtPHYMs_B2ubhh3flRugS25Hc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8">
+<span class="px-3 py-1 bg-secondary/90 text-white font-label-sm tracking-wider uppercase mb-3 inline-block rounded-sm">Featured</span>
+<h3 class="font-headline-md text-white mb-2">Exquisite Silks &amp; Brocades</h3>
+<p class="text-surface-variant font-body-md max-w-md">Immerse yourself in textures that speak volumes of heritage and craftsmanship.</p>
+</div>
+</div>
+<!-- Secondary Feature -->
+<div class="md:col-span-4 relative rounded-xl overflow-hidden shadow-ambient h-[500px] group bg-surface-container-high/80 backdrop-blur-sm flex flex-col items-center justify-center text-center p-8 border border-secondary-container">
+<span class="material-symbols-outlined text-5xl gold-text mb-6">diamond</span>
+<h3 class="font-headline-md text-primary mb-4">Uncompromising Quality</h3>
+<p class="text-on-surface-variant font-body-md mb-8">Every thread is a testament to our dedication to providing only the finest materials for your bespoke creations.</p>
+<a class="text-secondary font-label-sm uppercase tracking-wider gold-border-btm pb-1 hover:text-primary transition-colors" href="#">Learn More</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Collections Cards -->
+<section class="py-24 bg-transparent floral-bg-subtle w-full relative border-y border-outline-variant/30 scroll-animate">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+<div>
+<span class="font-label-sm text-secondary tracking-widest uppercase mb-2 block">Curated Selection</span>
+<h2 class="font-headline-lg text-primary">Our Collections</h2>
+</div>
+<a class="text-primary font-label-sm uppercase tracking-wider gold-border-btm pb-1 hover:text-secondary transition-colors inline-flex items-center gap-1" href="#">
+                        View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Card 1 -->
+<div class="group cursor-pointer">
+<div class="relative h-[400px] overflow-hidden rounded-lg shadow-sm mb-6 transition-all duration-300 group-hover:shadow-ambient group-hover:scale-[1.02]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Close up shot of luxurious deep maroon women's fabric with intricate golden embroidery, softly lit in a premium boutique setting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCqSGo3JBdnkZUojnZjnBUUxzdNPE2fojMBnOT9abgHQceA017m2jiILQHvvhr2oY9_5p-JiWiV6wFYFh-UYzdLLASJT2BnC3Ijse2EgL_r3AxWu5HzAiYM17LvzHB80ftiG5Gxfnp6I4txJtR77xUP1gwmu20E-EasvWMz8g3N1gDibtriDkSyNgmkEdUYNorP04dOYMyPl0LHaUjh1HjE8Mq_ipooBi0fI3-QAQV3IaRVgnOqKN1U2g')"></div>
+<div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300"></div>
+</div>
+<div class="text-center">
+<h3 class="font-headline-md text-primary mb-1">Women's Fabrics</h3>
+<p class="font-body-md text-secondary">Elegance woven in every thread</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group cursor-pointer">
+<div class="relative h-[400px] overflow-hidden rounded-lg shadow-sm mb-6 transition-all duration-300 group-hover:shadow-ambient group-hover:scale-[1.02]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Neatly stacked rolls of high quality, soft inner lining materials in neutral cream and pastel tones, resting on a polished wooden table in a well-lit studio." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDLLCmbazLiFkvC2azak8340jlWUWM-DAppY-QsZjbYnmzYMPVxZ_lNdKNSwVXvSfy8NZCexAA2GuvbD4rqa7jrNdgbArrWciootXdfLW2P41cM1aefx885pspbMUbwDT9F8K-IMdgMkqxIWAsAjAFAYtmJA1-GljGnIrzV9KTWhEc-crlJ3Apr7PzXHzUvm4fqWc2vqpQRVk2PPIFlmrOp1K2x09z4X_VHNt4-ZgfEkUHDLpchD4g-BQ')"></div>
+<div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300"></div>
+</div>
+<div class="text-center">
+<h3 class="font-headline-md text-primary mb-1">Lining Materials</h3>
+<p class="font-body-md text-secondary">The foundation of comfort</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group cursor-pointer">
+<div class="relative h-[400px] overflow-hidden rounded-lg shadow-sm mb-6 transition-all duration-300 group-hover:shadow-ambient group-hover:scale-[1.02]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="A delicate drape of fabric falls cascading beautifully, showcasing fluid movement and rich texture in a warm, inviting luxury environment." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD-7z1KAsbuakzAlmq4Otdo4DGI0ny-rDMZoMDZzNZSR5j0meJK-pQagN2UQjiq2rO3N7H8HE1i6C3EMobUNE01uhDR7ezQFJGnqvcwVGs14HZLp6Q6LooTdoByrgabkMKL6ZqlYsvSu78fliu_L4ST949sRwkUKjem_YovY3MyA3LacRzv-YcKpnicrC1ibNCTcl660YlIshk5FnGms98NQTOZcgwAMtI__AZF2ziComrq0Qemy0skJg')"></div>
+<div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300"></div>
+</div>
+<div class="text-center">
+<h3 class="font-headline-md text-primary mb-1">Falls &amp; Borders</h3>
+<p class="font-body-md text-secondary">Finishing touches of grace</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Trust / USP Section -->
+<section class="py-20 maroon-bg text-surface w-full border-t-[4px] border-secondary scroll-animate">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x-0 md:divide-x divide-secondary/30">
+<div class="flex flex-col items-center p-4">
+<span class="material-symbols-outlined text-4xl text-secondary-fixed mb-4">workspace_premium</span>
+<h4 class="font-label-sm uppercase tracking-wider text-secondary-fixed mb-2">Premium Quality</h4>
+<p class="font-body-md text-surface-variant/80 text-sm">Sourced for excellence</p>
+</div>
+<div class="flex flex-col items-center p-4">
+<span class="material-symbols-outlined text-4xl text-secondary-fixed mb-4">layers</span>
+<h4 class="font-label-sm uppercase tracking-wider text-secondary-fixed mb-2">Wide Range</h4>
+<p class="font-body-md text-surface-variant/80 text-sm">Endless possibilities</p>
+</div>
+<div class="flex flex-col items-center p-4">
+<span class="material-symbols-outlined text-4xl text-secondary-fixed mb-4">local_shipping</span>
+<h4 class="font-label-sm uppercase tracking-wider text-secondary-fixed mb-2">Free Delivery</h4>
+<p class="font-body-md text-surface-variant/80 text-sm">On 10 meters or more</p>
+</div>
+<div class="flex flex-col items-center p-4">
+<span class="material-symbols-outlined text-4xl text-secondary-fixed mb-4">verified_user</span>
+<h4 class="font-label-sm uppercase tracking-wider text-secondary-fixed mb-2">Trusted By</h4>
+<p class="font-body-md text-surface-variant/80 text-sm">Tailors &amp; Designers</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Social / CTA Section -->
+<section class="py-24 bg-transparent w-full relative overflow-hidden scroll-animate">
+<div class="max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop text-center relative z-10">
+<span class="material-symbols-outlined text-5xl text-primary mb-6" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<h2 class="font-headline-lg text-primary mb-4">Join Our Community</h2>
+<p class="font-body-lg text-on-surface-variant mb-10 max-w-2xl mx-auto">
+                    Please support us by following our business page for updates on new arrivals, exclusive collections, and behind-the-scenes glimpses.
+                </p>
+<a class="inline-flex items-center justify-center px-8 py-4 bg-white shadow-ambient rounded-full text-primary font-headline-md gold-border hover:bg-primary hover:text-secondary-fixed hover:border-transparent transition-all duration-300 gap-3 group" href="#">
+<img alt="Instagram" class="w-8 h-8 group-hover:brightness-200 transition-all duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5AszERVWou_ikD4dxi41qgLtqcOMvpRn61l5qwKfQxraXXVODCC_3T7uZSDylRvvBOj71n3WY5ZGY7M_qq0L0xoZtua59CK_WfpDe1WmW7J6cWQ1XaXt-FR2qPqXJpIG2OPaktz2Uj_FPmo7xhuR9TKvoShNJPHx5_j95KjoO0br2ILdviIgjoUIMmQD2tAZfsIouYnmK3F01Uec56bqqLWrfYg7XsEHs_JwaruIc8yHGPBHgVgay2w"/>
+                    @jpsfabrics
+                </a>
+<div class="mt-16 flex items-center justify-center gap-4 text-secondary opacity-70">
+<span class="material-symbols-outlined">favorite_border</span>
+<span class="font-headline-md italic">Thank you for being part of this journey!</span>
+<span class="material-symbols-outlined">favorite_border</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer from JSON -->
+<footer class="bg-inverse-surface dark:bg-tertiary flex flex-col items-center gap-unit py-12 px-margin-desktop text-center w-full flat no shadows relative z-10">
+<!-- Logo -->
+<div class="font-headline-md text-headline-md text-secondary-fixed mb-6 tracking-widest">
+            JPS FABRICS
+        </div>
+<!-- Links -->
+<div class="flex flex-wrap justify-center gap-6 mb-8">
+<a class="font-body-md text-body-md text-on-tertiary-container hover:text-secondary-fixed hover:text-secondary-fixed transition-colors opacity-90 hover:opacity-100 duration-200" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-tertiary-container hover:text-secondary-fixed hover:text-secondary-fixed transition-colors opacity-90 hover:opacity-100 duration-200" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-on-tertiary-container hover:text-secondary-fixed hover:text-secondary-fixed transition-colors opacity-90 hover:opacity-100 duration-200" href="#">Visit Store</a>
+<a class="font-body-md text-body-md text-on-tertiary-container hover:text-secondary-fixed hover:text-secondary-fixed transition-colors opacity-90 hover:opacity-100 duration-200 flex items-center gap-1" href="#">
+                WhatsApp Us
+            </a>
+</div>
+<!-- Divider -->
+<div class="w-full max-w-md h-px bg-on-tertiary-container/30 mb-6"></div>
+<!-- Copyright -->
+<div class="font-body-md text-body-md text-secondary-fixed opacity-70 text-sm">
+            © 2024 JPS Fabrics Chennai. All Rights Reserved.
+        </div>
+<div class="font-body-md text-body-md text-secondary-fixed opacity-50 text-xs mt-2 uppercase tracking-widest">
+            Shop Quality. Stitch Beauty. Create Confidence.
+        </div>
+</footer>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-animate').forEach((element) => {
+            observer.observe(element);
+        });
+    });
+</script>
+</body></html>

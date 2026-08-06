@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { motion } from "framer-motion";
 import * as THREE from "three";
+import Link from "next/link";
 
 // 3D Fabric Plane Component
 function FabricMesh() {
@@ -60,51 +61,63 @@ export default function Hero() {
       {/* Floating Gold Particles Overlay (CSS based) */}
       <div className="absolute inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 animate-pulse pointer-events-none"></div>
 
-      {/* Content */}
-      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto flex flex-col items-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
+      {/* Overlay Content aligned with Stitch UI */}
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 pointer-events-none mix-blend-difference">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
-          className="mb-4"
+          transition={{ duration: 1, delay: 0.2 }}
+          className="text-white/80 tracking-[0.2em] uppercase mb-4 text-xs md:text-sm font-semibold"
         >
-          <span className="text-accent font-sans tracking-[0.3em] uppercase text-sm font-semibold">
-            JPS Fabrics Exclusive
-          </span>
+          The Premium Boutique
+        </motion.p>
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="text-5xl md:text-7xl lg:text-8xl font-serif text-white max-w-5xl leading-[1.1] mb-6"
+        >
+          <span className="italic font-light opacity-90">Something New</span><br />
+          Is Here
+        </motion.h1>
+        
+        {/* Divider */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.6 }}
+          className="flex items-center gap-4 mb-8"
+        >
+          <div className="h-px w-16 bg-white/50"></div>
+          <div className="w-2 h-2 rounded-full bg-accent"></div>
+          <div className="h-px w-16 bg-white/50"></div>
         </motion.div>
 
-        <motion.h1 
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.5, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="text-5xl md:text-7xl lg:text-8xl font-serif text-light font-bold leading-tight mb-8 drop-shadow-2xl"
-        >
-          Premium Fabrics <br/>
-          <span className="text-accent italic font-light">For Elegant Creations</span>
-        </motion.h1>
-
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5, delay: 0.8 }}
-          className="text-lg md:text-xl text-secondary/80 font-sans max-w-2xl mx-auto mb-12 font-light tracking-wide"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.8 }}
+          className="text-white/70 max-w-2xl text-lg md:text-xl font-light mb-12"
         >
-          Discover a curated collection of luxury women's fabrics, lining materials, and falls designed for the modern boutique experience.
+          Discover our latest collection of premium textiles, meticulously curated for elegance and crafted for perfection. Experience the tactile luxury of JPS Fabrics.
         </motion.p>
-
+        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1 }}
-          className="flex flex-col sm:flex-row gap-6 items-center"
+          className="pointer-events-auto"
         >
-          <button className="px-10 py-4 bg-accent text-dark font-sans font-semibold uppercase tracking-wider text-sm hover:bg-white hover:text-primary transition-all duration-300 shadow-[0_0_20px_rgba(212,175,55,0.4)]">
-            Explore Collection
-          </button>
-          
-          <button className="px-10 py-4 bg-transparent border border-secondary/30 text-secondary font-sans font-medium uppercase tracking-wider text-sm hover:border-accent hover:text-accent transition-all duration-300 backdrop-blur-sm">
-            View Lookbook
-          </button>
+          <Link
+            href="/collections"
+            className="group relative inline-flex items-center justify-center px-8 py-4 bg-transparent border border-white/30 text-white font-medium uppercase tracking-widest text-sm hover:bg-white hover:text-dark transition-all duration-500 overflow-hidden"
+          >
+            <span className="relative z-10 flex items-center gap-2">
+              Explore Collections
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </span>
+            <div className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-out"></div>
+          </Link>
         </motion.div>
       </div>
 

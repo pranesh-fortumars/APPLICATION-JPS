@@ -50,6 +50,49 @@ html.lenis, html.lenis body {
   overflow: hidden;
 }
 
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* --- Stitch UI Integrations --- */
+
+.gold-text { color: #D4AF37; }
+.maroon-text { color: #4A0D1A; }
+.maroon-bg { background-color: #4A0D1A; }
+
+.floral-bg-subtle {
+    background-image: radial-gradient(rgba(212, 175, 55, 0.15) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.shadow-ambient {
+    box-shadow: 0 20px 40px -10px rgba(74, 13, 26, 0.15);
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
+}
+
+.animate-float {
+    animation: float 5s ease-in-out infinite;
+}
+
+.bg-shimmer {
+    background: linear-gradient(-45deg, var(--background), #fbf2ed, #efe6e2, var(--background));
+    background-size: 400% 400%;
+    animation: shimmer 15s ease infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 .lenis.lenis-smooth iframe {
   pointer-events: none;
 }
