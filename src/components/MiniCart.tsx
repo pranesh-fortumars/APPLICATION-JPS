@@ -55,7 +55,7 @@ export default function MiniCart() {
                 items.map((item) => (
                   <div key={item.product.id} className="flex gap-4 border-b border-black/5 dark:border-white/5 pb-6">
                     <div className="relative w-24 h-32 bg-secondary shrink-0 overflow-hidden">
-                      <Image src={item.product.images[0]} alt={item.product.name} fill className="object-cover" />
+                      <Image src={item.product.images[0]} alt={item.product.name} fill sizes="96px" className="object-cover" />
                     </div>
                     <div className="flex flex-col flex-1 py-1">
                       <div className="flex justify-between items-start gap-2">

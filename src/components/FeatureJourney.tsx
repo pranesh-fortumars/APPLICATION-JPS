@@ -46,6 +46,7 @@ export default function FeatureJourney() {
               src="https://images.unsplash.com/photo-1605518216938-7c31b7b14ad0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
               alt="Premium fabrics stacked elegantly" 
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
               className="object-cover transition-transform duration-700 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#2a0002]/90 to-transparent"></div>

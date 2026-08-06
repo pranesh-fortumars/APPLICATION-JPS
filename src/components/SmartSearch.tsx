@@ -85,8 +85,8 @@ export default function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
                           onClick={onClose}
                           className="group flex gap-4 items-center p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-sm transition-colors"
                         >
-                          <div className="relative w-16 h-16 shrink-0 bg-secondary">
-                            <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
+                          <div className="relative w-16 h-20 bg-secondary shrink-0 overflow-hidden">
+                            <Image src={product.images[0]} alt={product.name} fill sizes="64px" className="object-cover" />
                           </div>
                           <div className="flex flex-col">
                             <span className="font-serif font-bold text-foreground group-hover:text-primary transition-colors line-clamp-1">{product.name}</span>

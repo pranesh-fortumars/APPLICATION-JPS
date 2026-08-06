@@ -32,6 +32,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           src={product.images[0]} 
           alt={product.name}
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover transition-opacity duration-500 group-hover:opacity-0"
         />
         {product.images[1] && (
@@ -39,6 +40,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             src={product.images[1]} 
             alt={`${product.name} alternate view`}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover opacity-0 transition-all duration-700 scale-105 group-hover:opacity-100 group-hover:scale-100"
           />
         )}
