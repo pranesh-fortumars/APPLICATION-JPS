@@ -34,6 +34,7 @@ export default function Footer() {
               <Link href="/collections/lining" className="hover:text-accent transition-colors w-max">Lining Materials</Link>
               <Link href="/collections/falls" className="hover:text-accent transition-colors w-max">Falls & Trims</Link>
               <Link href="/about" className="hover:text-accent transition-colors w-max">About the Boutique</Link>
+              <Link href="/faq" className="hover:text-accent transition-colors w-max">FAQ</Link>
             </div>
           </div>
 
@@ -95,6 +96,8 @@ export default function Footer() {
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-secondary transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-secondary transition-colors">Terms of Service</Link>
+            <Link href="/shipping" className="hover:text-secondary transition-colors">Shipping</Link>
+            <Link href="/refunds" className="hover:text-secondary transition-colors">Refunds</Link>
           </div>
         </div>
       </div>
