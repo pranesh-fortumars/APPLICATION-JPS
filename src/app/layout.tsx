@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Cormorant_Garamond, Outfit } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import MiniCart from "@/components/MiniCart";
+import CustomCursor from "@/components/CustomCursor";
 
-const inter = Inter({
+const inter = Outfit({
   variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const playfair = Playfair_Display({
+const playfair = Cormorant_Garamond({
   variable: "--font-playfair",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -41,20 +43,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${playfair.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
+    <html lang="en" className="antialiased">
+      <body
+        className={`${inter.variable} ${playfair.variable} min-h-screen bg-background text-foreground selection:bg-accent selection:text-dark`}
+      >
         <SmoothScroll>
+          <CustomCursor />
           {children}
+          <MiniCart />
+          <FloatingWhatsApp />
         </SmoothScroll>
-        <FloatingWhatsApp />
-        <MiniCart />
       </body>
     </html>
   );
