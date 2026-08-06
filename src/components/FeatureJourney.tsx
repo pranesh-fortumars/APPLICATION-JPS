@@ -49,14 +49,14 @@ export default function FeatureJourney() {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
               className="object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#2a0002]/90 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-primary/90 to-transparent"></div>
             
             <div className="absolute bottom-0 left-0 p-8 flex flex-col items-start">
-              <span className="px-3 py-1 bg-[#775a19]/90 text-white font-sans text-xs font-semibold tracking-wider uppercase mb-3 inline-block rounded-sm">
+              <span className="px-3 py-1 bg-accent/90 text-white font-sans text-xs font-semibold tracking-wider uppercase mb-3 inline-block rounded-sm">
                 Featured
               </span>
               <h3 className="font-serif text-2xl md:text-3xl text-white mb-2 font-medium">Exquisite Silks & Brocades</h3>
-              <p className="text-[#e9e1dc] font-sans max-w-md">Immerse yourself in textures that speak volumes of heritage and craftsmanship.</p>
+              <p className="text-white/80 font-sans max-w-md">Immerse yourself in textures that speak volumes of heritage and craftsmanship.</p>
             </div>
           </motion.div>
 
@@ -66,16 +66,16 @@ export default function FeatureJourney() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="md:col-span-4 relative rounded-xl overflow-hidden shadow-ambient h-[400px] md:h-[500px] group bg-[#efe6e2]/80 backdrop-blur-sm flex flex-col items-center justify-center text-center p-8 border border-[#fed488]/30"
+            className="md:col-span-4 relative rounded-xl overflow-hidden shadow-ambient h-[400px] md:h-[500px] group bg-secondary/80 backdrop-blur-sm flex flex-col items-center justify-center text-center p-8 border border-accent/30"
           >
-            <Diamond className="text-[#D4AF37] mb-6 animate-float" size={48} strokeWidth={1.5} />
+            <Diamond className="text-accent mb-6 animate-float" size={48} strokeWidth={1.5} />
             <h3 className="font-serif text-2xl text-primary mb-4 font-medium">Uncompromising Quality</h3>
             <p className="text-on-surface-variant font-sans mb-8 leading-relaxed">
               Every thread is a testament to our dedication to providing only the finest materials for your bespoke creations.
             </p>
             <Link 
               href="/about"
-              className="text-[#775a19] font-sans text-xs font-semibold uppercase tracking-wider border-b border-[#775a19] pb-1 hover:text-primary transition-colors"
+              className="text-accent font-sans text-xs font-semibold uppercase tracking-wider border-b border-accent pb-1 hover:text-primary transition-colors"
             >
               Learn More
             </Link>

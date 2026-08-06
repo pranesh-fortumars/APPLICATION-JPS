@@ -16,8 +16,27 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "JPS Fabrics | Luxury Boutique",
-  description: "Premium fabrics for elegant creations. Women's fabrics, lining materials, and falls.",
+  title: {
+    template: "%s | JPS Fabrics",
+    default: "JPS Fabrics | Luxury Women's Boutique",
+  },
+  description: "Experience unparalleled luxury with JPS Fabrics. We source the finest silks, georgettes, and premium materials for bespoke tailoring and bridal couture.",
+  keywords: ["luxury fabrics", "bridal couture", "banarasi silk", "premium textiles", "boutique fabrics"],
+  authors: [{ name: "JPS Fabrics" }],
+  creator: "JPS Fabrics",
+  openGraph: {
+    title: "JPS Fabrics | Luxury Women's Boutique",
+    description: "Experience unparalleled luxury with JPS Fabrics. We source the finest silks and premium materials for bespoke tailoring.",
+    url: "https://jpsfabrics.com",
+    siteName: "JPS Fabrics",
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "JPS Fabrics | Luxury Women's Boutique",
+    description: "Premium textiles for bridal couture and bespoke fashion.",
+  },
 };
 
 export default function RootLayout({

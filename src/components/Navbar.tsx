@@ -61,6 +61,7 @@ export default function Navbar() {
         {/* Action Buttons */}
         <div className="hidden lg:flex items-center gap-6">
           <button 
+            aria-label="Search"
             onClick={() => setIsSearchOpen(true)}
             className="text-foreground hover:text-accent transition-colors"
           >
@@ -68,6 +69,7 @@ export default function Navbar() {
           </button>
           
           <button 
+            aria-label="Cart"
             onClick={toggleCart}
             className="relative text-foreground hover:text-accent transition-colors"
           >
@@ -90,10 +92,10 @@ export default function Navbar() {
 
         {/* Mobile Actions Toggle */}
         <div className="lg:hidden flex items-center gap-4 text-foreground">
-          <button onClick={() => setIsSearchOpen(true)}>
+          <button aria-label="Search" onClick={() => setIsSearchOpen(true)}>
             <Search size={24} />
           </button>
-          <button onClick={toggleCart} className="relative">
+          <button aria-label="Cart" onClick={toggleCart} className="relative">
             <ShoppingBag size={24} />
             {totalItems > 0 && (
               <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
@@ -101,7 +103,7 @@ export default function Navbar() {
               </span>
             )}
           </button>
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <button aria-label="Mobile Menu" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>

@@ -1,9 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Award, Layers, Truck, ShieldCheck } from "lucide-react";
+import { motion } from "framer-motion";
 
-const USP_DATA = [
+const usps = [
   {
     icon: Award,
     title: "Premium Quality",
@@ -28,26 +28,22 @@ const USP_DATA = [
 
 export default function USP() {
   return (
-    <section className="py-20 maroon-bg text-white w-full border-t-[4px] border-[#775a19]">
+    <section className="py-20 bg-primary text-white w-full border-t-[4px] border-accent">
       <div className="max-w-[1440px] mx-auto px-6 md:px-20">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x-0 md:divide-x divide-white/20">
           
-          {USP_DATA.map((item, index) => (
+          {usps.map((usp, index) => (
             <motion.div 
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="flex flex-col items-center p-4 group"
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="flex flex-col items-center justify-center p-4 group"
             >
-              <item.icon className="text-[#ffdea5] mb-4 group-hover:scale-110 transition-transform duration-300" size={40} strokeWidth={1.5} />
-              <h4 className="font-sans text-xs uppercase tracking-widest text-[#ffdea5] mb-2 font-semibold">
-                {item.title}
-              </h4>
-              <p className="font-sans text-white/80 text-sm font-light">
-                {item.description}
-              </p>
+              <usp.icon size={36} className="text-accent mb-4 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
+              <h3 className="font-serif text-xl font-bold mb-2 tracking-wide text-white">{usp.title}</h3>
+              <p className="text-white/60 font-sans text-sm font-light">{usp.description}</p>
             </motion.div>
           ))}
 

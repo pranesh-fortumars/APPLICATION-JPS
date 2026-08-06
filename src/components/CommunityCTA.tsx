@@ -46,7 +46,7 @@ export default function CommunityCTA() {
           <Link 
             href="https://instagram.com/jpsfabrics"
             target="_blank"
-            className="inline-flex items-center justify-center px-8 py-4 bg-white shadow-ambient rounded-full text-primary font-serif text-xl border border-[#775a19] hover:bg-primary hover:text-[#ffdea5] hover:border-transparent transition-all duration-500 gap-3 group"
+            className="inline-flex items-center justify-center px-8 py-4 bg-white shadow-ambient rounded-full text-primary font-serif text-xl border border-accent hover:bg-primary hover:text-secondary hover:border-transparent transition-all duration-500 gap-3 group"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

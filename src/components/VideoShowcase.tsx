@@ -67,15 +67,19 @@ export default function VideoShowcase() {
           />
 
           {/* Play Button Overlay */}
-          <div className={`absolute inset-0 flex items-center justify-center bg-black/20 transition-opacity duration-500 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>
-            <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 text-white shadow-2xl group-hover:scale-110 transition-transform duration-500">
-              <Play size={32} fill="currentColor" className="ml-1" />
-            </div>
-          </div>
+          <button 
+            aria-label={isPlaying ? "Pause video" : "Play video"}
+            onClick={togglePlay}
+            className={`absolute inset-0 m-auto w-24 h-24 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 text-white hover:bg-white/20 transition-all duration-300 z-10 ${
+              isPlaying ? 'opacity-0 hover:opacity-100' : 'opacity-100'
+            }`}
+          >
+            <Play size={32} fill="currentColor" className="ml-1" />
+          </button>
           
           {/* Decorative Corner Accents */}
-          <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-white/50 m-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-white/50 m-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-white/50 m-6 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-white/50 m-6 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         </motion.div>
 
       </div>
