@@ -102,25 +102,18 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Google Maps Mock (Using an image for premium feel without iframe overhead) */}
-            <div className="relative w-full h-[300px] bg-secondary rounded-sm overflow-hidden shadow-ambient">
-              <Image 
-                src="https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
-                alt="Map location" 
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover opacity-80 mix-blend-luminosity"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-dark/60 to-transparent flex items-end p-6">
-                <a 
-                  href="https://maps.google.com" 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="px-6 py-3 bg-white text-dark font-sans font-semibold uppercase tracking-widest text-xs hover:bg-accent hover:text-white transition-colors"
-                >
-                  Get Directions
-                </a>
-              </div>
+            {/* Live Google Maps Embed */}
+            <div className="relative w-full h-[400px] bg-secondary rounded-sm overflow-hidden shadow-ambient">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m3!1d3886.409890858607!2d80.218826!3d13.0732!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5266858e7474ad%3A0xc34b07f897f25979!2sPoonamallee%20High%20Rd%2C%20Aminjikarai%2C%20Chennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="absolute inset-0 w-full h-full grayscale hover:grayscale-0 transition-all duration-700"
+              ></iframe>
             </div>
           </motion.div>
 

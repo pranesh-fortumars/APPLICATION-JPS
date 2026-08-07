@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Cormorant_Garamond } from "next/font/google";
+import { Outfit, Cormorant_Garamond, Great_Vibes } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
@@ -16,6 +16,12 @@ const inter = Outfit({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
+});
+
+const script = Great_Vibes({
+  variable: "--font-script",
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -50,7 +56,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="antialiased">
       <body
-        className={`${inter.variable} ${playfair.variable} min-h-screen bg-background text-foreground selection:bg-accent selection:text-dark`}
+        className={`${inter.variable} ${playfair.variable} ${script.variable} min-h-screen bg-background text-foreground selection:bg-accent selection:text-dark`}
       >
         <SmoothScroll>
           <CustomCursor />

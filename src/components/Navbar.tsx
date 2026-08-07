@@ -41,8 +41,9 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="font-serif text-4xl font-bold tracking-tight text-primary">
-          JPS<span className="text-accent text-2xl">.</span>
+        <Link href="/" className="flex flex-col items-center justify-center relative w-32 group">
+          <span className="font-script text-5xl leading-none tracking-normal text-primary">JPS</span>
+          <span className="font-sans text-[8px] uppercase tracking-[0.3em] text-foreground/50 mt-1">Boutique</span>
         </Link>
 
         {/* Desktop Links */}

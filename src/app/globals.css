@@ -12,6 +12,7 @@
 
   --font-sans: var(--font-inter);
   --font-serif: var(--font-playfair);
+  --font-script: var(--font-script);
 }
 
 :root {

@@ -9,8 +9,9 @@ export default function Footer() {
           
           {/* Brand Info */}
           <div className="flex flex-col">
-            <Link href="/" className="font-serif text-5xl font-bold tracking-tight text-primary mb-6">
-              JPS<span className="text-accent">.</span>
+            <Link href="/" className="flex flex-col items-start justify-center relative w-max group mb-6">
+              <span className="font-script text-6xl leading-none tracking-normal text-primary">JPS</span>
+              <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-foreground/50 mt-1 pl-1">Boutique</span>
             </Link>
             <p className="text-primary font-sans text-base font-medium leading-relaxed mb-8 max-w-xs">
               Curating premium fabrics and exquisite textiles for women's luxury clothing. Experience the elegance of JPS Fabrics.
