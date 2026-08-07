@@ -79,6 +79,8 @@ export default function InteractiveCategories() {
                     src={categories[0].image} 
                     alt={categories[0].title}
                     fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500" />
@@ -107,6 +109,8 @@ export default function InteractiveCategories() {
                     src={categories[1].image} 
                     alt={categories[1].title}
                     fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500" />
@@ -131,6 +135,8 @@ export default function InteractiveCategories() {
                     src={categories[2].image} 
                     alt={categories[2].title}
                     fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500" />

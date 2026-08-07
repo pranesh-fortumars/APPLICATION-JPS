@@ -68,6 +68,7 @@ export default function AboutBoutique() {
                 src="https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
                 alt="Women in traditional sarees"
                 fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-primary/10 mix-blend-multiply" />

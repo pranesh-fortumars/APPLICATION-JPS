@@ -105,7 +105,7 @@ export default function ContactPage() {
             {/* Live Google Maps Embed */}
             <div className="relative w-full h-[400px] bg-secondary rounded-sm overflow-hidden shadow-ambient">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m3!1d3886.409890858607!2d80.218826!3d13.0732!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5266858e7474ad%3A0xc34b07f897f25979!2sPoonamallee%20High%20Rd%2C%20Aminjikarai%2C%20Chennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                src="https://maps.google.com/maps?q=Aminjikarai,Chennai&t=&z=14&ie=UTF8&iwloc=&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

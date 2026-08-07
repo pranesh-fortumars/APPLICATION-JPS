@@ -36,7 +36,9 @@ export default function VideoShowcase() {
       if (isPlaying) {
         videoRef.current.pause();
       } else {
-        videoRef.current.play();
+        videoRef.current.play().catch(e => {
+          console.warn("Video playback failed (mock source):", e);
+        });
       }
       setIsPlaying(!isPlaying);
     }
@@ -86,7 +88,6 @@ export default function VideoShowcase() {
           {/* We use a high-quality fashion stock video placeholder */}
           <video
             ref={videoRef}
-            src="https://assets.mixkit.co/videos/preview/mixkit-woman-spinning-in-a-beautiful-dress-4428-large.mp4"
             loop
             muted
             playsInline
