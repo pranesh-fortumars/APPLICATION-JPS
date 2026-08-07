@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import MagneticButton from "@/components/MagneticButton";
 
 const collections = [
   {
@@ -103,7 +104,7 @@ export default function Collections() {
                 <div className="absolute inset-4 border border-accent/0 transition-colors duration-500 group-hover:border-accent/50 z-10"></div>
 
                 {/* Content */}
-                <div className="absolute inset-0 flex flex-col justify-end p-8 z-20">
+                <div className="absolute inset-0 flex flex-col justify-end p-8 z-20" data-cursor="VIEW">
                   <h3 className="text-3xl font-serif text-light mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                     {collection.title}
                   </h3>
@@ -120,9 +121,11 @@ export default function Collections() {
         </div>
         
         <div className="mt-16 text-center">
-          <button className="px-10 py-4 bg-transparent border border-primary text-primary font-sans font-medium uppercase tracking-wider text-base hover:bg-primary hover:text-secondary transition-all duration-300">
-            View All Fabrics
-          </button>
+          <MagneticButton strength={0.3}>
+            <button className="px-10 py-4 bg-transparent border border-primary text-primary font-sans font-medium uppercase tracking-wider text-base hover:bg-primary hover:text-secondary transition-all duration-300">
+              View All Fabrics
+            </button>
+          </MagneticButton>
         </div>
       </div>
     </section>

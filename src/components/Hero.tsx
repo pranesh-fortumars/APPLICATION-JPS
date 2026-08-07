@@ -5,6 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { motion } from "framer-motion";
 import * as THREE from "three";
 import Link from "next/link";
+import MagneticButton from "@/components/MagneticButton";
 
 // 3D Fabric Plane Component
 function FabricMesh() {
@@ -71,14 +72,32 @@ export default function Hero() {
         >
           The Premium Boutique
         </motion.p>
+        
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.4 }}
-          className="text-6xl md:text-8xl lg:text-9xl font-serif text-primary max-w-5xl leading-[1.1] mb-6"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.3 } }
+          }}
+          initial="hidden"
+          animate="visible"
+          className="text-6xl md:text-8xl lg:text-9xl font-serif text-primary max-w-5xl leading-[1.1] mb-6 flex flex-col items-center"
         >
-          <span className="italic font-light opacity-90">Something New</span><br />
-          Is Here
+          <div className="overflow-hidden">
+            <motion.span 
+              variants={{ hidden: { y: "100%" }, visible: { y: 0, transition: { ease: [0.76, 0, 0.24, 1], duration: 1 } } }}
+              className="inline-block italic font-light opacity-90"
+            >
+              Something New
+            </motion.span>
+          </div>
+          <div className="overflow-hidden">
+            <motion.span 
+              variants={{ hidden: { y: "100%" }, visible: { y: 0, transition: { ease: [0.76, 0, 0.24, 1], duration: 1 } } }}
+              className="inline-block"
+            >
+              Is Here
+            </motion.span>
+          </div>
         </motion.h1>
         
         {/* Divider */}
@@ -108,16 +127,18 @@ export default function Hero() {
           transition={{ duration: 1, delay: 1 }}
           className="pointer-events-auto"
         >
-          <Link
-            href="/collections"
-            className="group relative inline-flex items-center justify-center px-8 py-4 bg-transparent border border-primary/30 text-primary font-medium uppercase tracking-widest text-base hover:bg-primary hover:text-white transition-all duration-500 overflow-hidden"
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              Explore Collections
-              <span className="group-hover:translate-x-1 transition-transform">→</span>
-            </span>
-            <div className="absolute inset-0 bg-primary scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-out"></div>
-          </Link>
+          <MagneticButton strength={0.4}>
+            <Link
+              href="/collections"
+              className="group relative inline-flex items-center justify-center px-8 py-4 bg-transparent border border-primary/30 text-primary font-medium uppercase tracking-widest text-base hover:bg-primary hover:text-white transition-all duration-500 overflow-hidden"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                Explore Collections
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+              <div className="absolute inset-0 bg-primary scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-out"></div>
+            </Link>
+          </MagneticButton>
         </motion.div>
       </div>
 

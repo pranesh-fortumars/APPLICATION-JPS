@@ -1,12 +1,35 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import { Play } from "lucide-react";
 import { useState, useRef } from "react";
 
 export default function VideoShowcase() {
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // 3D Tilt state
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-0.5, 0.5], [8, -8]);
+  const rotateY = useTransform(x, [-0.5, 0.5], [-8, 8]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    x.set(mouseX / width - 0.5);
+    y.set(mouseY / height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -21,7 +44,7 @@ export default function VideoShowcase() {
 
   return (
     <section className="w-full bg-background py-24">
-      <div className="max-w-[1400px] mx-auto px-6">
+      <div className="max-w-[1400px] mx-auto px-6" style={{ perspective: 2000 }}>
         
         {/* Section Header */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
@@ -30,16 +53,16 @@ export default function VideoShowcase() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="font-serif text-4xl md:text-5xl font-bold text-dark mb-4"
+              className="font-serif text-5xl md:text-6xl font-bold text-primary mb-4"
             >
-              The Art of <span className="text-primary italic">Draping</span>
+              The Art of <span className="text-accent italic">Draping</span>
             </motion.h2>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-foreground/70 font-light"
+              className="text-primary/70 font-light text-lg"
             >
               Experience the fluidity, texture, and unmatched grace of our signature Banarasi silks and premium georgettes in motion.
             </motion.p>
@@ -48,12 +71,17 @@ export default function VideoShowcase() {
 
         {/* Video Container */}
         <motion.div 
+          ref={containerRef}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative aspect-video w-full overflow-hidden bg-secondary group cursor-pointer border border-black/10 dark:border-white/10 shadow-2xl"
+          className="relative aspect-video w-full overflow-hidden bg-secondary group cursor-pointer border border-black/10 shadow-2xl rounded-sm"
           onClick={togglePlay}
+          data-cursor="PLAY"
         >
           {/* We use a high-quality fashion stock video placeholder */}
           <video
