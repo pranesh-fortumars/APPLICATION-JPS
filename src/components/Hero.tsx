@@ -34,11 +34,11 @@ function FabricMesh() {
     <mesh ref={meshRef} position={[0, 0, -2]}>
       {/* Plane geometry with many segments for smooth waves */}
       <planeGeometry args={[15, 10, 64, 64]} />
-      {/* Premium burgundy material with slight sheen */}
+      {/* Premium blush material with slight sheen */}
       <meshStandardMaterial 
-        color="#4A0D1A" 
-        roughness={0.4}
-        metalness={0.2}
+        color="#E8B4B8" 
+        roughness={0.2}
+        metalness={0.1}
         side={THREE.DoubleSide}
       />
     </mesh>
@@ -47,7 +47,7 @@ function FabricMesh() {
 
 export default function Hero() {
   return (
-    <section className="relative w-full h-screen overflow-hidden bg-dark flex items-center justify-center">
+    <section className="relative w-full h-screen overflow-hidden bg-secondary flex items-center justify-center">
       {/* 3D Background */}
       <div className="absolute inset-0 z-0 opacity-70">
         <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
@@ -62,12 +62,12 @@ export default function Hero() {
       <div className="absolute inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 animate-pulse pointer-events-none"></div>
 
       {/* Overlay Content aligned with Stitch UI */}
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 pointer-events-none mix-blend-difference">
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 pointer-events-none">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2 }}
-          className="text-white/80 tracking-[0.2em] uppercase mb-4 text-xs md:text-sm font-semibold"
+          className="text-primary/80 tracking-[0.2em] uppercase mb-4 text-sm md:text-base font-semibold"
         >
           The Premium Boutique
         </motion.p>
@@ -75,7 +75,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.4 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-serif text-white max-w-5xl leading-[1.1] mb-6"
+          className="text-6xl md:text-8xl lg:text-9xl font-serif text-primary max-w-5xl leading-[1.1] mb-6"
         >
           <span className="italic font-light opacity-90">Something New</span><br />
           Is Here
@@ -88,16 +88,16 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.6 }}
           className="flex items-center gap-4 mb-8"
         >
-          <div className="h-px w-16 bg-white/50"></div>
+          <div className="h-px w-16 bg-primary/20"></div>
           <div className="w-2 h-2 rounded-full bg-accent"></div>
-          <div className="h-px w-16 bg-white/50"></div>
+          <div className="h-px w-16 bg-primary/20"></div>
         </motion.div>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="text-white/70 max-w-2xl text-lg md:text-xl font-light mb-12"
+          className="text-primary/70 max-w-2xl text-xl md:text-2xl font-light mb-12"
         >
           Discover our latest collection of premium textiles, meticulously curated for elegance and crafted for perfection. Experience the tactile luxury of JPS Fabrics.
         </motion.p>
@@ -110,13 +110,13 @@ export default function Hero() {
         >
           <Link
             href="/collections"
-            className="group relative inline-flex items-center justify-center px-8 py-4 bg-transparent border border-white/30 text-white font-medium uppercase tracking-widest text-sm hover:bg-white hover:text-dark transition-all duration-500 overflow-hidden"
+            className="group relative inline-flex items-center justify-center px-8 py-4 bg-transparent border border-primary/30 text-primary font-medium uppercase tracking-widest text-base hover:bg-primary hover:text-white transition-all duration-500 overflow-hidden"
           >
             <span className="relative z-10 flex items-center gap-2">
               Explore Collections
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </span>
-            <div className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-out"></div>
+            <div className="absolute inset-0 bg-primary scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-out"></div>
           </Link>
         </motion.div>
       </div>
@@ -128,7 +128,7 @@ export default function Hero() {
         transition={{ delay: 2, duration: 1 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
       >
-        <span className="text-secondary/60 text-xs tracking-widest uppercase">Scroll to discover</span>
+        <span className="text-primary/60 text-sm tracking-widest uppercase">Scroll to discover</span>
         <motion.div 
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}

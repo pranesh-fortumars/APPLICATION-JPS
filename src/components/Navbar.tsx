@@ -41,8 +41,8 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="font-serif text-3xl font-bold tracking-tight text-primary">
-          JPS<span className="text-accent text-xl">.</span>
+        <Link href="/" className="font-serif text-4xl font-bold tracking-tight text-primary">
+          JPS<span className="text-accent text-2xl">.</span>
         </Link>
 
         {/* Desktop Links */}
@@ -51,7 +51,7 @@ export default function Navbar() {
             <Link
               key={link.name}
               href={link.href}
-              className="text-sm font-medium tracking-wide uppercase hover:text-accent transition-colors"
+              className="text-base font-medium tracking-wide uppercase hover:text-accent transition-colors"
             >
               {link.name}
             </Link>

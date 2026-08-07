@@ -54,7 +54,7 @@ export default function Collections() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-5xl font-serif text-primary font-bold"
+            className="text-5xl md:text-6xl font-serif text-primary font-bold"
           >
             Featured Collections
           </motion.h2>
@@ -104,7 +104,7 @@ export default function Collections() {
 
                 {/* Content */}
                 <div className="absolute inset-0 flex flex-col justify-end p-8 z-20">
-                  <h3 className="text-2xl font-serif text-light mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                  <h3 className="text-3xl font-serif text-light mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                     {collection.title}
                   </h3>
                   
@@ -120,7 +120,7 @@ export default function Collections() {
         </div>
         
         <div className="mt-16 text-center">
-          <button className="px-10 py-4 bg-transparent border border-primary text-primary font-sans font-medium uppercase tracking-wider text-sm hover:bg-primary hover:text-secondary transition-all duration-300">
+          <button className="px-10 py-4 bg-transparent border border-primary text-primary font-sans font-medium uppercase tracking-wider text-base hover:bg-primary hover:text-secondary transition-all duration-300">
             View All Fabrics
           </button>
         </div>

@@ -40,9 +40,9 @@ export default function Stats() {
   ];
 
   return (
-    <section className="py-24 bg-primary text-secondary relative overflow-hidden">
+    <section className="py-24 bg-secondary text-primary relative overflow-hidden border-y border-black/5">
       {/* Decorative background pattern */}
-      <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')] pointer-events-none mix-blend-overlay"></div>
+      <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')] pointer-events-none mix-blend-overlay"></div>
       
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
@@ -55,10 +55,10 @@ export default function Stats() {
               transition={{ duration: 0.8, delay: index * 0.1 }}
               className="flex flex-col items-center justify-center space-y-4"
             >
-              <h3 className="text-5xl md:text-6xl font-serif text-accent font-bold drop-shadow-lg">
+              <h3 className="text-6xl md:text-7xl lg:text-8xl font-serif text-accent font-bold drop-shadow-sm">
                 <Counter from={0} to={stat.value} suffix={stat.suffix} duration={2.5} />
               </h3>
-              <p className="text-sm md:text-base tracking-widest uppercase font-sans font-medium text-secondary/90">
+              <p className="text-base md:text-lg tracking-widest uppercase font-sans font-semibold text-primary/70">
                 {stat.label}
               </p>
             </motion.div>
