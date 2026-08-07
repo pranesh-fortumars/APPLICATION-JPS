@@ -71,16 +71,16 @@ export default function MiniCart() {
                       </div>
                       <p className="text-sm text-foreground/60 mt-1">{item.product.material}</p>
                       
-                      <div className="mt-auto flex items-center justify-between">
-                        <div className="flex items-center border border-black/10 dark:border-white/10">
+                        <div className="mt-auto flex items-center justify-between">
+                        <div className="flex items-center border border-black/10">
                           <button 
-                            className="px-3 py-1 hover:bg-black/5 dark:hover:bg-white/5"
-                            onClick={() => updateQuantity(item.product.id, Math.max(1, item.quantity - 1))}
+                            className="px-3 py-1 hover:bg-black/5"
+                            onClick={() => updateQuantity(item.product.id, Math.max(0.5, item.quantity - 0.5))}
                           >-</button>
-                          <span className="px-3 py-1 text-sm">{item.quantity}</span>
+                          <span className="px-3 py-1 text-sm w-12 text-center">{item.quantity} m</span>
                           <button 
-                            className="px-3 py-1 hover:bg-black/5 dark:hover:bg-white/5"
-                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                            className="px-3 py-1 hover:bg-black/5"
+                            onClick={() => updateQuantity(item.product.id, item.quantity + 0.5)}
                           >+</button>
                         </div>
                         <span className="font-semibold text-primary">₹{item.product.price * item.quantity}</span>
