@@ -35,6 +35,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             src={product.images[0]} 
             alt={product.name}
             fill
+            priority={product.id === "p-001" || product.id === "p-002"}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-opacity duration-500 group-hover:opacity-0"
           />

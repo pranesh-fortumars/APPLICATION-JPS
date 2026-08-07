@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSearchParams, useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
@@ -11,11 +12,36 @@ import { Filter, X, Search } from "lucide-react";
 const CATEGORIES: Category[] = ["Womens Fabrics", "Lining Materials", "Falls", "New Arrivals", "Designer Collection"];
 const MATERIALS: Material[] = ["Cotton", "Silk", "Rayon", "Chiffon", "Georgette", "Crepe"];
 
-export default function CollectionsPage() {
-  const [selectedCategory, setSelectedCategory] = useState<Category | "All">("All");
+function CollectionsContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
+  const initialCategory = (searchParams.get("category") as Category) || "All";
+  
+  const [selectedCategory, setSelectedCategory] = useState<Category | "All">(initialCategory);
   const [selectedMaterial, setSelectedMaterial] = useState<Material | "All">("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  // Update URL when category changes, or sync state when URL changes
+  useEffect(() => {
+    const categoryFromUrl = (searchParams.get("category") as Category) || "All";
+    if (categoryFromUrl !== selectedCategory) {
+      setSelectedCategory(categoryFromUrl);
+    }
+  }, [searchParams]);
+
+  const handleCategoryChange = (cat: Category | "All") => {
+    setSelectedCategory(cat);
+    // Update URL without reloading
+    const newParams = new URLSearchParams(searchParams.toString());
+    if (cat === "All") {
+      newParams.delete("category");
+    } else {
+      newParams.set("category", cat);
+    }
+    router.push(`/collections?${newParams.toString()}`, { scroll: false });
+  };
 
   // Instant filtering logic
   const filteredProducts = useMemo(() => {
@@ -50,7 +76,7 @@ export default function CollectionsPage() {
               type="radio" 
               name="category" 
               checked={selectedCategory === "All"}
-              onChange={() => setSelectedCategory("All")}
+              onChange={() => handleCategoryChange("All")}
               className="accent-primary w-4 h-4" 
             />
             All Collections
@@ -61,7 +87,7 @@ export default function CollectionsPage() {
                 type="radio" 
                 name="category"
                 checked={selectedCategory === cat}
-                onChange={() => setSelectedCategory(cat)}
+                onChange={() => handleCategoryChange(cat)}
                 className="accent-primary w-4 h-4" 
               />
               {cat}
@@ -193,7 +219,7 @@ export default function CollectionsPage() {
             <div className="flex flex-col items-center justify-center py-32 text-center">
               <p className="text-2xl font-serif text-foreground/50 mb-4">No fabrics found matching your criteria.</p>
               <button 
-                onClick={() => { setSelectedCategory("All"); setSelectedMaterial("All"); setSearchQuery(""); }}
+                onClick={() => { handleCategoryChange("All"); setSelectedMaterial("All"); setSearchQuery(""); }}
                 className="text-accent underline hover:text-primary transition-colors uppercase tracking-widest text-sm font-bold"
               >
                 Clear all filters
@@ -205,5 +231,13 @@ export default function CollectionsPage() {
 
       <Footer />
     </main>
+  );
+}
+
+export default function CollectionsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading collections...</div>}>
+      <CollectionsContent />
+    </Suspense>
   );
 }

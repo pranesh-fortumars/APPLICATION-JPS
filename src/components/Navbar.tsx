@@ -21,9 +21,9 @@ export default function Navbar() {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Collections", href: "/collections" },
-    { name: "Women's Fabrics", href: "/collections/womens" },
-    { name: "Lining", href: "/collections/lining" },
-    { name: "Falls", href: "/collections/falls" },
+    { name: "Women's Fabrics", href: "/collections?category=Womens Fabrics" },
+    { name: "Lining", href: "/collections?category=Lining Materials" },
+    { name: "Falls", href: "/collections?category=Falls" },
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
