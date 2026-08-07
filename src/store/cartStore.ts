@@ -21,11 +21,20 @@ interface CartState {
   totalPrice: number;
 }
 
+const calculateTotals = (items: CartItem[]) => {
+  return {
+    totalItems: items.reduce((total, item) => total + item.quantity, 0),
+    totalPrice: items.reduce((total, item) => total + item.product.price * item.quantity, 0),
+  };
+};
+
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
       isOpen: false,
+      totalItems: 0,
+      totalPrice: 0,
 
       addItem: (item) => {
         set((state) => {
@@ -33,45 +42,47 @@ export const useCartStore = create<CartState>()(
             (i) => i.product.id === item.product.id
           );
 
+          let newItems;
           if (existingItemIndex > -1) {
-            const newItems = [...state.items];
+            newItems = [...state.items];
             newItems[existingItemIndex].quantity += item.quantity;
-            return { items: newItems };
+          } else {
+            newItems = [...state.items, item];
           }
-          return { items: [...state.items, item], isOpen: true };
+
+          return { 
+            items: newItems, 
+            isOpen: true,
+            ...calculateTotals(newItems)
+          };
         });
       },
 
       removeItem: (productId) =>
-        set((state) => ({
-          items: state.items.filter((item) => item.product.id !== productId),
-        })),
+        set((state) => {
+          const newItems = state.items.filter((item) => item.product.id !== productId);
+          return { items: newItems, ...calculateTotals(newItems) };
+        }),
 
       updateQuantity: (productId, quantity) =>
-        set((state) => ({
-          items: state.items.map((item) =>
+        set((state) => {
+          const newItems = state.items.map((item) =>
             item.product.id === productId ? { ...item, quantity } : item
-          ),
-        })),
+          );
+          return { items: newItems, ...calculateTotals(newItems) };
+        }),
 
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
 
-      clearCart: () => set({ items: [] }),
-
-      get totalItems() {
-        return get().items.reduce((total, item) => total + item.quantity, 0);
-      },
-
-      get totalPrice() {
-        return get().items.reduce(
-          (total, item) => total + item.product.price * item.quantity,
-          0
-        );
-      },
+      clearCart: () => set({ items: [], totalItems: 0, totalPrice: 0 }),
     }),
     {
       name: "jps-cart-storage",
-      partialize: (state) => ({ items: state.items }), // Only persist items
+      partialize: (state) => ({ 
+        items: state.items,
+        totalItems: state.totalItems,
+        totalPrice: state.totalPrice 
+      }),
     }
   )
 );
