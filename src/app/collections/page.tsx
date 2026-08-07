@@ -20,6 +20,7 @@ function CollectionsContent() {
   
   const [selectedCategory, setSelectedCategory] = useState<Category | "All">(initialCategory);
   const [selectedMaterial, setSelectedMaterial] = useState<Material | "All">("All");
+  const [maxPrice, setMaxPrice] = useState<number>(10000);
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
@@ -49,9 +50,10 @@ function CollectionsContent() {
       const matchCategory = selectedCategory === "All" || product.category.includes(selectedCategory);
       const matchMaterial = selectedMaterial === "All" || product.material === selectedMaterial;
       const matchSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchCategory && matchMaterial && matchSearch;
+      const matchPrice = product.price <= maxPrice;
+      return matchCategory && matchMaterial && matchSearch && matchPrice;
     });
-  }, [selectedCategory, selectedMaterial, searchQuery]);
+  }, [selectedCategory, selectedMaterial, searchQuery, maxPrice]);
 
   const FilterSidebar = () => (
     <div className="flex flex-col gap-8 w-full md:w-64 shrink-0">
@@ -122,6 +124,27 @@ function CollectionsContent() {
               {mat}
             </label>
           ))}
+        </div>
+      </div>
+
+      {/* Price */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="font-serif text-lg font-bold text-primary">Max Price</h3>
+          <span className="text-sm font-semibold text-accent">₹{maxPrice}</span>
+        </div>
+        <input 
+          type="range"
+          min="100"
+          max="10000"
+          step="100"
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(Number(e.target.value))}
+          className="w-full accent-primary"
+        />
+        <div className="flex justify-between text-xs text-foreground/50 mt-2">
+          <span>₹100</span>
+          <span>₹10,000+</span>
         </div>
       </div>
     </div>
@@ -219,7 +242,7 @@ function CollectionsContent() {
             <div className="flex flex-col items-center justify-center py-32 text-center">
               <p className="text-2xl font-serif text-foreground/50 mb-4">No fabrics found matching your criteria.</p>
               <button 
-                onClick={() => { handleCategoryChange("All"); setSelectedMaterial("All"); setSearchQuery(""); }}
+                onClick={() => { handleCategoryChange("All"); setSelectedMaterial("All"); setSearchQuery(""); setMaxPrice(10000); }}
                 className="text-accent underline hover:text-primary transition-colors uppercase tracking-widest text-sm font-bold"
               >
                 Clear all filters

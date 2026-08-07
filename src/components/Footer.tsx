@@ -12,7 +12,7 @@ export default function Footer() {
             <Link href="/" className="font-serif text-5xl font-bold tracking-tight text-primary mb-6">
               JPS<span className="text-accent">.</span>
             </Link>
-            <p className="text-primary/80 font-sans text-base font-light leading-relaxed mb-8 max-w-xs">
+            <p className="text-primary font-sans text-base font-medium leading-relaxed mb-8 max-w-xs">
               Curating premium fabrics and exquisite textiles for women's luxury clothing. Experience the elegance of JPS Fabrics.
             </p>
             <div className="flex gap-4">
@@ -27,8 +27,8 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div className="flex flex-col">
-            <h4 className="text-accent font-sans uppercase tracking-widest text-sm font-semibold mb-6">Explore</h4>
-            <div className="flex flex-col gap-4 text-base font-light text-primary/80">
+            <h4 className="text-accent font-sans uppercase tracking-widest text-sm font-bold mb-6">Explore</h4>
+            <div className="flex flex-col gap-4 text-base font-medium text-primary">
               <Link href="/collections" className="hover:text-accent transition-colors w-max">New Arrivals</Link>
               <Link href="/collections?category=Womens Fabrics" className="hover:text-accent transition-colors w-max">Women's Fabrics</Link>
               <Link href="/collections?category=Lining Materials" className="hover:text-accent transition-colors w-max">Lining Materials</Link>
@@ -40,8 +40,8 @@ export default function Footer() {
 
           {/* Contact */}
           <div className="flex flex-col">
-            <h4 className="text-accent font-sans uppercase tracking-widest text-sm font-semibold mb-6">Contact Us</h4>
-            <div className="flex flex-col gap-4 text-base font-light text-primary/80">
+            <h4 className="text-accent font-sans uppercase tracking-widest text-sm font-bold mb-6">Contact Us</h4>
+            <div className="flex flex-col gap-4 text-base font-medium text-primary">
               <div className="flex items-start gap-3">
                 <MapPin size={18} className="text-accent shrink-0 mt-1" />
                 <span>No.347 D P.H Road,<br />Aminjikarai, Chennai - 29</span>
@@ -62,8 +62,8 @@ export default function Footer() {
 
           {/* Working Hours */}
           <div className="flex flex-col">
-            <h4 className="text-accent font-sans uppercase tracking-widest text-sm font-semibold mb-6">Showroom Hours</h4>
-            <div className="flex flex-col gap-4 text-base font-light text-primary/80">
+            <h4 className="text-accent font-sans uppercase tracking-widest text-sm font-bold mb-6">Showroom Hours</h4>
+            <div className="flex flex-col gap-4 text-base font-medium text-primary">
               <div className="flex items-start gap-3">
                 <Clock size={18} className="text-accent shrink-0 mt-0.5" />
                 <div className="flex flex-col gap-1">
@@ -71,14 +71,14 @@ export default function Footer() {
                     <span>Mon - Sat</span>
                     <span>10:00 AM - 9:00 PM</span>
                   </div>
-                  <div className="flex justify-between w-40 text-primary/50">
+                  <div className="flex justify-between w-40 text-primary/70">
                     <span>Sunday</span>
                     <span>Closed</span>
                   </div>
                 </div>
               </div>
-              <div className="mt-4 p-4 border border-primary/10 bg-primary/5 rounded-sm">
-                <p className="text-sm text-primary/70 italic">
+              <div className="mt-4 p-4 border border-primary/20 bg-primary/10 rounded-sm">
+                <p className="text-sm text-primary font-medium italic">
                   Book an exclusive appointment for tailored fabric consulting.
                 </p>
                 <button className="mt-3 text-accent uppercase text-xs font-bold tracking-widest border-b border-accent pb-0.5 hover:text-primary hover:border-primary transition-colors">
@@ -90,8 +90,7 @@ export default function Footer() {
 
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-primary/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm font-light text-primary/60">
+        <div className="pt-8 border-t border-primary/20 flex flex-col md:flex-row items-center justify-between gap-4 text-sm font-medium text-primary/80">
           <p>© {new Date().getFullYear()} JPS Fabrics. All rights reserved.</p>
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>

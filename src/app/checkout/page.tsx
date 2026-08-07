@@ -1,21 +1,27 @@
 "use client";
 
-import { useCartStore } from "@/store/cartStore";
 import { useState } from "react";
-import Image from "next/image";
+import { useCartStore } from "@/store/cartStore";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { ShieldCheck, ChevronRight, CheckCircle2 } from "lucide-react";
+import { Check, ShieldCheck, ChevronRight, Lock } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCartStore();
+  const [step, setStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const [formData, setFormData] = useState({
+    email: "", phone: "", firstName: "", lastName: "",
+    address: "", city: "", state: "", pincode: ""
+  });
+
+  const handlePayment = () => {
     setIsProcessing(true);
-    
-    // Mock processing delay
+    // Simulate Razorpay window
     setTimeout(() => {
       setIsProcessing(false);
       setIsSuccess(true);
@@ -25,203 +31,194 @@ export default function CheckoutPage() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
-        <CheckCircle2 size={80} className="text-[#50C878] mb-8 animate-float" strokeWidth={1} />
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-primary mb-4">Order Confirmed</h1>
-        <p className="font-sans text-foreground/70 max-w-md mb-8">
-          Thank you for choosing JPS Fabrics. We have received your order and will begin processing it immediately. An email confirmation has been sent to you.
-        </p>
-        <Link 
-          href="/collections"
-          className="px-8 py-4 bg-dark text-white font-sans font-semibold uppercase tracking-widest text-sm hover:bg-primary transition-colors shadow-ambient"
-        >
-          Return to Boutique
-        </Link>
+      <div className="min-h-screen bg-background flex flex-col">
+        <Navbar />
+        <main className="flex-1 flex flex-col items-center justify-center p-6 text-center pt-32">
+          <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-24 h-24 bg-primary text-white rounded-full flex items-center justify-center mb-8 shadow-2xl shadow-primary/20">
+            <Check size={48} />
+          </motion.div>
+          <h1 className="font-serif text-4xl md:text-5xl font-bold text-primary mb-4">Order Confirmed!</h1>
+          <p className="text-foreground/70 font-sans max-w-md mx-auto mb-8">
+            Thank you for shopping with JPS Fabrics. Your order #JPS-{Math.floor(Math.random() * 100000)} has been placed successfully. We've sent a confirmation email to {formData.email}.
+          </p>
+          <Link href="/" className="px-8 py-4 bg-primary text-white font-bold uppercase tracking-widest text-sm hover:bg-primary/90 transition-colors">
+            Return to Boutique
+          </Link>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (items.length === 0 && !isSuccess) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        <Navbar />
+        <main className="flex-1 flex flex-col items-center justify-center p-6 text-center pt-32">
+          <h1 className="font-serif text-3xl font-bold mb-4">Your cart is empty</h1>
+          <Link href="/collections" className="text-primary underline font-bold uppercase tracking-widest text-sm">Continue Shopping</Link>
+        </main>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row">
-      {/* Left: Form */}
-      <div className="flex-1 p-6 md:p-12 lg:p-20 order-2 md:order-1 flex flex-col">
-        <div className="max-w-xl mx-auto w-full">
-          {/* Header */}
-          <div className="mb-12">
-            <Link href="/" className="font-serif font-bold text-2xl tracking-widest text-primary block mb-6">
-              JPS FABRICS
-            </Link>
-            <div className="flex items-center gap-2 text-xs font-sans text-foreground/50 uppercase tracking-widest">
-              <Link href="/cart" className="hover:text-primary transition-colors">Cart</Link>
-              <ChevronRight size={14} />
-              <span className="font-bold text-primary">Information</span>
-              <ChevronRight size={14} />
-              <span>Shipping</span>
-              <ChevronRight size={14} />
-              <span>Payment</span>
+    <div className="min-h-screen bg-background flex flex-col">
+      <Navbar />
+      
+      <main className="flex-1 max-w-[1440px] w-full mx-auto px-6 md:px-20 py-32">
+        <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-foreground/40 mb-12">
+          <span className={step >= 1 ? "text-primary" : ""}>1. Details</span>
+          <ChevronRight size={14} />
+          <span className={step >= 2 ? "text-primary" : ""}>2. Shipping</span>
+          <ChevronRight size={14} />
+          <span className={step >= 3 ? "text-primary" : ""}>3. Payment</span>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+          {/* Left: Forms */}
+          <div className="lg:col-span-2 flex flex-col gap-8">
+            
+            {/* Step 1: Contact Details */}
+            <div className={`p-8 border border-black/10 transition-colors ${step === 1 ? 'border-primary/50 shadow-ambient' : ''}`}>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="font-serif text-2xl font-bold">Contact Details</h2>
+                {step > 1 && <button onClick={() => setStep(1)} className="text-xs uppercase font-bold text-accent">Edit</button>}
+              </div>
+              
+              <AnimatePresence>
+                {step === 1 && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <input type="text" placeholder="First Name" required value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} className="border border-black/10 px-4 py-3 outline-none focus:border-primary bg-transparent" />
+                      <input type="text" placeholder="Last Name" required value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} className="border border-black/10 px-4 py-3 outline-none focus:border-primary bg-transparent" />
+                    </div>
+                    <input type="email" placeholder="Email Address" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full border border-black/10 px-4 py-3 outline-none focus:border-primary bg-transparent" />
+                    <input type="tel" placeholder="Phone Number" required value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full border border-black/10 px-4 py-3 outline-none focus:border-primary bg-transparent" />
+                    
+                    <button 
+                      onClick={() => setStep(2)}
+                      disabled={!formData.email || !formData.firstName}
+                      className="mt-6 px-8 py-4 bg-primary text-white font-bold uppercase tracking-widest text-sm disabled:opacity-50"
+                    >
+                      Continue to Shipping
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
+
+            {/* Step 2: Shipping */}
+            <div className={`p-8 border border-black/10 transition-colors ${step === 2 ? 'border-primary/50 shadow-ambient' : ''}`}>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="font-serif text-2xl font-bold">Shipping Address</h2>
+                {step > 2 && <button onClick={() => setStep(2)} className="text-xs uppercase font-bold text-accent">Edit</button>}
+              </div>
+              
+              <AnimatePresence>
+                {step === 2 && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden space-y-4">
+                    <input type="text" placeholder="Address (House No, Building, Street)" required value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} className="w-full border border-black/10 px-4 py-3 outline-none focus:border-primary bg-transparent" />
+                    <div className="grid grid-cols-2 gap-4">
+                      <input type="text" placeholder="City" required value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} className="border border-black/10 px-4 py-3 outline-none focus:border-primary bg-transparent" />
+                      <input type="text" placeholder="State" required value={formData.state} onChange={e => setFormData({...formData, state: e.target.value})} className="border border-black/10 px-4 py-3 outline-none focus:border-primary bg-transparent" />
+                    </div>
+                    <input type="text" placeholder="Pincode" required value={formData.pincode} onChange={e => setFormData({...formData, pincode: e.target.value})} className="w-full sm:w-1/2 border border-black/10 px-4 py-3 outline-none focus:border-primary bg-transparent" />
+                    
+                    <button 
+                      onClick={() => setStep(3)}
+                      disabled={!formData.address || !formData.pincode}
+                      className="mt-6 px-8 py-4 bg-primary text-white font-bold uppercase tracking-widest text-sm disabled:opacity-50"
+                    >
+                      Continue to Payment
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Step 3: Payment */}
+            <div className={`p-8 border border-black/10 transition-colors ${step === 3 ? 'border-primary/50 shadow-ambient' : ''}`}>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="font-serif text-2xl font-bold">Payment</h2>
+              </div>
+              
+              <AnimatePresence>
+                {step === 3 && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                    
+                    <div className="p-6 border border-black/10 mb-6 flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <input type="radio" checked readOnly className="accent-primary w-5 h-5" />
+                        <span className="font-serif font-bold text-lg">Razorpay Secure</span>
+                      </div>
+                      <ShieldCheck className="text-primary" />
+                    </div>
+
+                    <p className="text-sm text-foreground/60 mb-8">
+                      You will be redirected to Razorpay to complete your purchase securely. We accept UPI, Net Banking, and major Credit/Debit cards.
+                    </p>
+                    
+                    <button 
+                      onClick={handlePayment}
+                      disabled={isProcessing}
+                      className="w-full py-4 bg-primary text-white font-bold uppercase tracking-widest text-sm flex justify-center items-center gap-2 hover:bg-primary/90 transition-colors"
+                    >
+                      {isProcessing ? (
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      ) : (
+                        <><Lock size={16} /> Pay ₹{totalPrice}</>
+                      )}
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-            {/* Contact Info */}
-            <section>
-              <h2 className="font-serif text-xl font-bold text-primary mb-4">Contact Information</h2>
-              <div className="flex flex-col gap-4">
-                <input 
-                  type="email" 
-                  placeholder="Email or mobile phone number" 
-                  required
-                  className="w-full p-4 bg-transparent border border-black/20 dark:border-white/20 rounded-sm focus:outline-none focus:border-primary transition-colors font-sans"
-                />
+          {/* Right: Order Summary */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-32 p-8 bg-secondary/30 border border-black/5">
+              <h3 className="font-serif text-2xl font-bold mb-6 border-b border-black/10 pb-4">Order Summary</h3>
+              
+              <div className="space-y-6 mb-8 max-h-[40vh] overflow-y-auto pr-2">
+                {items.map(item => (
+                  <div key={item.product.id} className="flex gap-4">
+                    <div className="w-16 h-24 bg-white shrink-0">
+                      <img src={item.product.images[0]} alt={item.product.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex flex-col flex-1">
+                      <p className="font-serif font-bold text-sm line-clamp-2">{item.product.name}</p>
+                      <p className="text-xs text-foreground/50 mt-1">{item.selectedColor || 'Default'} • {item.quantity}m</p>
+                      <p className="mt-auto font-sans font-medium text-sm">₹{item.product.price * item.quantity}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </section>
 
-            {/* Shipping Info */}
-            <section>
-              <h2 className="font-serif text-xl font-bold text-primary mb-4">Shipping Address</h2>
-              <div className="flex flex-col gap-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <input 
-                    type="text" 
-                    placeholder="First name" 
-                    required
-                    className="w-full p-4 bg-transparent border border-black/20 dark:border-white/20 rounded-sm focus:outline-none focus:border-primary transition-colors font-sans"
-                  />
-                  <input 
-                    type="text" 
-                    placeholder="Last name" 
-                    required
-                    className="w-full p-4 bg-transparent border border-black/20 dark:border-white/20 rounded-sm focus:outline-none focus:border-primary transition-colors font-sans"
-                  />
+              <div className="space-y-3 text-sm border-t border-black/10 pt-6 mb-6">
+                <div className="flex justify-between">
+                  <span className="text-foreground/70">Subtotal</span>
+                  <span className="font-medium">₹{totalPrice}</span>
                 </div>
-                <input 
-                  type="text" 
-                  placeholder="Address" 
-                  required
-                  className="w-full p-4 bg-transparent border border-black/20 dark:border-white/20 rounded-sm focus:outline-none focus:border-primary transition-colors font-sans"
-                />
-                <input 
-                  type="text" 
-                  placeholder="Apartment, suite, etc. (optional)" 
-                  className="w-full p-4 bg-transparent border border-black/20 dark:border-white/20 rounded-sm focus:outline-none focus:border-primary transition-colors font-sans"
-                />
-                <div className="grid grid-cols-3 gap-4">
-                  <input 
-                    type="text" 
-                    placeholder="City" 
-                    required
-                    className="w-full p-4 bg-transparent border border-black/20 dark:border-white/20 rounded-sm focus:outline-none focus:border-primary transition-colors font-sans col-span-1"
-                  />
-                  <select 
-                    className="w-full p-4 bg-transparent border border-black/20 dark:border-white/20 rounded-sm focus:outline-none focus:border-primary transition-colors font-sans col-span-1 appearance-none"
-                    required
-                  >
-                    <option value="" disabled selected>State</option>
-                    <option value="TN">Tamil Nadu</option>
-                    <option value="KL">Kerala</option>
-                    <option value="KA">Karnataka</option>
-                    <option value="MH">Maharashtra</option>
-                    <option value="DL">Delhi</option>
-                  </select>
-                  <input 
-                    type="text" 
-                    placeholder="PIN code" 
-                    required
-                    className="w-full p-4 bg-transparent border border-black/20 dark:border-white/20 rounded-sm focus:outline-none focus:border-primary transition-colors font-sans col-span-1"
-                  />
+                <div className="flex justify-between">
+                  <span className="text-foreground/70">Shipping</span>
+                  <span className="font-medium text-accent">Free</span>
                 </div>
               </div>
-            </section>
 
-            {/* Actions */}
-            <div className="flex justify-between items-center mt-4">
-              <Link href="/cart" className="text-sm font-sans text-primary hover:text-accent transition-colors">
-                Return to cart
-              </Link>
-              <button 
-                type="submit"
-                disabled={isProcessing || items.length === 0}
-                className="px-8 py-4 bg-primary text-white font-sans font-semibold uppercase tracking-widest text-sm hover:bg-primary/90 transition-colors shadow-ambient disabled:opacity-50 flex items-center gap-2"
-              >
-                {isProcessing ? "Processing..." : "Continue to Payment"}
-              </button>
+              <div className="flex justify-between items-center text-lg font-bold border-t border-black/10 pt-6">
+                <span className="font-serif">Total</span>
+                <span className="text-primary">₹{totalPrice}</span>
+              </div>
             </div>
-          </form>
-
-          {/* Footer */}
-          <div className="mt-16 pt-6 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs font-sans text-foreground/50">
-            <p>Secure Checkout</p>
-            <ShieldCheck size={16} />
           </div>
         </div>
-      </div>
-
-      {/* Right: Order Summary Sidebar */}
-      <div className="flex-1 p-6 md:p-12 lg:p-20 bg-[#fbf2ed] dark:bg-[#1a1a1a] order-1 md:order-2 border-b md:border-b-0 md:border-l border-black/5 dark:border-white/5">
-        <div className="max-w-md mx-auto w-full sticky top-12 flex flex-col gap-6">
-          
-          <div className="flex flex-col gap-4 max-h-[40vh] overflow-y-auto pr-2">
-            {items.map((item) => (
-              <div key={item.product.id} className="flex gap-4 items-center">
-                <div className="relative w-16 h-20 bg-secondary rounded-sm overflow-hidden shrink-0 border border-black/10 dark:border-white/10">
-                  <Image 
-                    src={item.product.images[0]} 
-                    alt={item.product.name} 
-                    fill 
-                    sizes="64px"
-                    className="object-cover" 
-                  />
-                  <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full z-10">
-                    {item.quantity}
-                  </span>
-                </div>
-                <div className="flex-1 flex flex-col">
-                  <span className="font-serif font-bold text-primary line-clamp-1">{item.product.name}</span>
-                  <span className="text-xs text-foreground/50 uppercase tracking-widest font-sans">{item.product.material}</span>
-                </div>
-                <span className="font-sans font-medium">₹{item.product.price * item.quantity}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="h-px w-full bg-black/10 dark:bg-white/10"></div>
-
-          <div className="flex gap-2">
-            <input 
-              type="text" 
-              placeholder="Discount code" 
-              className="flex-1 p-4 bg-transparent border border-black/20 dark:border-white/20 rounded-sm focus:outline-none focus:border-primary transition-colors font-sans"
-            />
-            <button className="px-6 bg-black/10 dark:bg-white/10 text-foreground font-sans font-semibold uppercase tracking-widest text-sm hover:bg-black/20 transition-colors rounded-sm">
-              Apply
-            </button>
-          </div>
-
-          <div className="h-px w-full bg-black/10 dark:bg-white/10"></div>
-
-          <div className="flex flex-col gap-2 font-sans text-sm text-foreground/70">
-            <div className="flex justify-between">
-              <span>Subtotal</span>
-              <span>₹{totalPrice}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Shipping</span>
-              <span className="text-xs">Calculated at next step</span>
-            </div>
-          </div>
-
-          <div className="h-px w-full bg-black/10 dark:bg-white/10"></div>
-
-          <div className="flex justify-between items-end">
-            <span className="font-sans font-bold text-lg">Total</span>
-            <span className="font-sans font-bold text-3xl text-primary">
-              <span className="text-sm font-normal text-foreground/50 mr-1">INR</span>
-              ₹{totalPrice}
-            </span>
-          </div>
-
-        </div>
-      </div>
+      </main>
+      
+      <Footer />
     </div>
   );
 }
