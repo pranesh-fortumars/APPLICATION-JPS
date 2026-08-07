@@ -24,29 +24,33 @@ export default function ProductCard({ product }: ProductCardProps) {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
-      className="group flex flex-col w-full bg-white dark:bg-[#1a1a1a] overflow-hidden rounded-sm hover:shadow-2xl transition-all duration-500 border border-black/5 dark:border-white/5"
+      className="group flex flex-col w-full bg-white dark:bg-[#1a1a1a] rounded-sm hover:shadow-2xl transition-all duration-500 border border-black/5 dark:border-white/5 overflow-hidden"
     >
-      <Link href={`/collections/${product.id}`} className="relative aspect-[3/4] overflow-hidden bg-secondary block">
-        {/* Image Container with Hover Zoom and 2nd Image Reveal */}
-        <Image 
-          src={product.images[0]} 
-          alt={product.name}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover transition-opacity duration-500 group-hover:opacity-0"
-        />
-        {product.images[1] && (
+      {/* Image Container */}
+      <div className="relative w-full aspect-[3/4] bg-secondary overflow-hidden">
+        
+        {/* Clickable Image Area */}
+        <Link href={`/collections/${product.id}`} className="absolute inset-0 z-0">
           <Image 
-            src={product.images[1]} 
-            alt={`${product.name} alternate view`}
+            src={product.images[0]} 
+            alt={product.name}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover opacity-0 transition-all duration-700 scale-105 group-hover:opacity-100 group-hover:scale-100"
+            className="object-cover transition-opacity duration-500 group-hover:opacity-0"
           />
-        )}
+          {product.images[1] && (
+            <Image 
+              src={product.images[1]} 
+              alt={`${product.name} alternate view`}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover opacity-0 transition-all duration-700 scale-105 group-hover:opacity-100 group-hover:scale-100"
+            />
+          )}
+        </Link>
         
         {/* Badges */}
-        <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
+        <div className="absolute top-4 left-4 flex flex-col gap-2 z-10 pointer-events-none">
           {product.isNewArrival && (
             <span className="bg-primary text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 shadow-md">
               New
@@ -58,34 +62,41 @@ export default function ProductCard({ product }: ProductCardProps) {
             </span>
           )}
         </div>
-      </Link>
 
-      {/* Quick Actions Overlay */}
-      <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out bg-gradient-to-t from-dark/80 to-transparent flex flex-col gap-2 justify-center z-20">
-        <button 
-          onClick={(e) => { e.preventDefault(); addItem({ product, quantity: 1 }); }}
-          className="flex items-center gap-2 bg-dark text-white px-4 py-3 font-medium text-xs uppercase tracking-wider hover:bg-primary transition-colors justify-center w-full shadow-lg"
-        >
-          <ShoppingBag size={14} />
-          Add to Cart
-        </button>
-        <div className="flex gap-2">
-          <Link 
-            href={whatsappUrl} 
-            target="_blank"
-            className="flex items-center gap-2 bg-[#25D366] text-white px-4 py-3 font-medium text-xs uppercase tracking-wider hover:bg-[#20bd5a] transition-colors flex-1 justify-center"
+        {/* Quick Actions Overlay */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out bg-gradient-to-t from-dark/90 to-transparent flex flex-col gap-2 z-20 pointer-events-auto">
+          <button 
+            onClick={(e) => { e.preventDefault(); addItem({ product, quantity: 1 }); }}
+            className="flex items-center gap-2 bg-dark text-white px-4 py-3 font-medium text-xs uppercase tracking-wider hover:bg-primary transition-colors justify-center w-full shadow-lg"
           >
-            <MessageCircle size={14} />
-            WhatsApp
-          </Link>
-          <Link href={`/collections/${product.id}`} className="flex items-center justify-center bg-white text-dark px-4 py-3 hover:bg-accent hover:text-white transition-colors">
-            <Eye size={16} />
-          </Link>
+            <ShoppingBag size={14} />
+            Add to Cart
+          </button>
+          
+          <div className="flex gap-2">
+            <a 
+              href={whatsappUrl} 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-[#25D366] text-white px-4 py-3 font-medium text-xs uppercase tracking-wider hover:bg-[#20bd5a] transition-colors flex-1 justify-center shadow-lg"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <MessageCircle size={14} />
+              WhatsApp
+            </a>
+            <Link 
+              href={`/collections/${product.id}`} 
+              className="flex items-center justify-center bg-white text-dark px-4 py-3 hover:bg-accent hover:text-white transition-colors shadow-lg"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Eye size={16} />
+            </Link>
+          </div>
         </div>
       </div>
 
       {/* Product Details */}
-      <Link href={`/collections/${product.id}`} className="p-5 flex flex-col gap-2">
+      <Link href={`/collections/${product.id}`} className="p-5 flex flex-col gap-2 bg-white dark:bg-[#1a1a1a] z-10 relative">
         <div className="text-xs text-primary/60 dark:text-secondary/60 uppercase tracking-widest font-semibold flex justify-between">
           <span>{product.material}</span>
           <span>{product.width}</span>
