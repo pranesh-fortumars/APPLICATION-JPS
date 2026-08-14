@@ -37,15 +37,14 @@ export default function CheckoutPage() {
   const handlePayment = async () => {
     setIsProcessing(true);
     
-    // Simulate Razorpay window delay
-    setTimeout(async () => {
-      const newOrderId = `JPS-${Math.floor(Math.random() * 1000000)}`;
-      setOrderId(newOrderId);
-      
-      try {
-        await setDoc(doc(db, "orders", newOrderId), {
-          orderId: newOrderId,
+    try {
+      // Call our secure backend to validate stock, calculate price, and create a Razorpay order
+      const response = await fetch('/api/checkout/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           userId: user?.uid || null,
+          items: items,
           contact: {
             email: formData.email,
             phone: formData.phone,
@@ -58,32 +57,36 @@ export default function CheckoutPage() {
             state: formData.state,
             pincode: formData.pincode
           },
-          items: items,
-          totalItems: totalItems,
-          totalPrice: finalPrice,
-          subtotal: totalPrice,
-          discount: discountAmount,
           couponCode: appliedCoupon?.code || null,
-          status: "Paid & Processing",
-          createdAt: new Date().toISOString()
-        });
+        })
+      });
 
-        // Clear local cart
-        clearCart();
-        
-        // If user is logged in, clear cloud cart as well
-        if (user) {
-          await setDoc(doc(db, "carts", user.uid), { items: [], totalItems: 0, totalPrice: 0 }, { merge: true });
-        }
+      const data = await response.json();
 
-        setIsSuccess(true);
-      } catch (error) {
-        console.error("Failed to place order:", error);
-        alert("Failed to place order. Please try again.");
-      } finally {
-        setIsProcessing(false);
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create order');
       }
-    }, 2000);
+
+      setOrderId(data.orderId);
+      
+      // Clear local cart
+      clearCart();
+      
+      // If user is logged in, clear cloud cart as well
+      if (user) {
+        await setDoc(doc(db, "carts", user.uid), { items: [], totalItems: 0, totalPrice: 0 }, { merge: true });
+      }
+
+      // Normally here we would open the Razorpay Checkout modal using data.paymentOrderId
+      // Since this is Mock mode (or Razorpay UI isn't injected yet), we simulate the UI flow succeeding
+      
+      setIsSuccess(true);
+    } catch (error: any) {
+      console.error("Failed to place order:", error);
+      alert(error.message || "Failed to place order. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   if (isSuccess) {

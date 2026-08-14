@@ -1,0 +1,68 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Function to check if a user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Function to check if a user is an admin via Custom Claims
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+
+    // Function to check if a user is a seller via Custom Claims
+    function isSeller() {
+      return isAuthenticated() && request.auth.token.seller == true;
+    }
+
+    // 1. Users Collection
+    match /users/{userId} {
+      // Users can read/write their own profile
+      allow read, update: if isAuthenticated() && request.auth.uid == userId;
+      // Admins can read all users
+      allow read: if isAdmin();
+      // Only backend (Admin SDK) can create users or change roles
+      allow create, delete: if false; 
+    }
+
+    // 2. Products Collection
+    match /products/{productId} {
+      // Anyone can read active products
+      allow read: if true;
+      // Only Admins can modify products (or Sellers for their own, handled via backend for now)
+      allow write: if isAdmin(); 
+    }
+
+    // 3. Orders Collection
+    match /orders/{orderId} {
+      // Users can read their own orders
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // Admins and Sellers can read orders
+      allow read: if isAdmin() || isSeller();
+      // Orders can ONLY be created/modified by the Secure Backend (Admin SDK)
+      allow write: if false; 
+    }
+
+    // 4. Carts Collection
+    match /carts/{userId} {
+      // Users can only read/write their own cart
+      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // 5. Wishlists Collection
+    match /wishlists/{userId} {
+      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // 6. Reviews Collection
+    match /reviews/{reviewId} {
+      allow read: if true;
+      // Users can create reviews if authenticated (Backend should validate eligible purchase)
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+  }
+}
