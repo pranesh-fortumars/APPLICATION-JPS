@@ -18,6 +18,13 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderId, setOrderId] = useState("");
+  
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{code: string, discount: number} | null>(null);
+  const [couponError, setCouponError] = useState("");
+
+  const discountAmount = appliedCoupon ? Math.floor(totalPrice * appliedCoupon.discount) : 0;
+  const finalPrice = totalPrice - discountAmount;
 
   const [formData, setFormData] = useState({
     email: user?.email || "", 
@@ -53,7 +60,10 @@ export default function CheckoutPage() {
           },
           items: items,
           totalItems: totalItems,
-          totalPrice: totalPrice,
+          totalPrice: finalPrice,
+          subtotal: totalPrice,
+          discount: discountAmount,
+          couponCode: appliedCoupon?.code || null,
           status: "Paid & Processing",
           createdAt: new Date().toISOString()
         });
@@ -215,7 +225,7 @@ export default function CheckoutPage() {
                       {isProcessing ? (
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                       ) : (
-                        <><Lock size={16} /> Pay ₹{totalPrice}</>
+                        <><Lock size={16} /> Pay ₹{finalPrice}</>
                       )}
                     </button>
                   </motion.div>
@@ -245,11 +255,58 @@ export default function CheckoutPage() {
                 ))}
               </div>
 
+              {/* Promo Code */}
+              <div className="mb-6 border-t border-black/10 pt-6">
+                <div className="flex gap-2">
+                  <input 
+                    type="text" 
+                    placeholder="Promo Code" 
+                    value={couponInput}
+                    onChange={e => setCouponInput(e.target.value)}
+                    disabled={!!appliedCoupon}
+                    className="flex-1 border border-black/10 px-4 py-3 outline-none focus:border-primary text-sm uppercase bg-transparent disabled:opacity-50"
+                  />
+                  {!appliedCoupon ? (
+                    <button 
+                      onClick={() => {
+                        setCouponError("");
+                        const code = couponInput.trim().toUpperCase();
+                        if (code === "WELCOME10") setAppliedCoupon({ code, discount: 0.1 });
+                        else if (code === "FESTIVE20") setAppliedCoupon({ code, discount: 0.2 });
+                        else setCouponError("Invalid or expired promo code");
+                      }}
+                      disabled={!couponInput}
+                      className="px-6 bg-dark text-white font-bold text-xs uppercase tracking-widest hover:bg-black transition-colors disabled:opacity-50"
+                    >
+                      Apply
+                    </button>
+                  ) : (
+                    <button 
+                      onClick={() => {
+                        setAppliedCoupon(null);
+                        setCouponInput("");
+                      }}
+                      className="px-6 border border-black/10 text-dark font-bold text-xs uppercase tracking-widest hover:bg-black/5 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+                {couponError && <p className="text-red-500 text-xs mt-2">{couponError}</p>}
+                {appliedCoupon && <p className="text-green-600 font-bold text-xs mt-2">Coupon '{appliedCoupon.code}' applied!</p>}
+              </div>
+
               <div className="space-y-3 text-sm border-t border-black/10 pt-6 mb-6">
                 <div className="flex justify-between">
                   <span className="text-foreground/70">Subtotal</span>
                   <span className="font-medium">₹{totalPrice}</span>
                 </div>
+                {appliedCoupon && (
+                  <div className="flex justify-between text-green-700 font-bold">
+                    <span>Discount ({appliedCoupon.code})</span>
+                    <span>-₹{discountAmount}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-foreground/70">Shipping</span>
                   <span className="font-medium text-accent">Free</span>
@@ -258,7 +315,7 @@ export default function CheckoutPage() {
 
               <div className="flex justify-between items-center text-lg font-bold border-t border-black/10 pt-6">
                 <span className="font-serif">Total</span>
-                <span className="text-primary">₹{totalPrice}</span>
+                <span className="text-primary">₹{finalPrice}</span>
               </div>
             </div>
           </div>
