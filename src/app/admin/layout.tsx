@@ -4,7 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
-import { LayoutDashboard, ShoppingCart, Package, Users, Settings, LogOut, LineChart, TrendingUp, Tag } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Package, Users, Settings, LogOut, LineChart, TrendingUp, Tag, RefreshCcw } from "lucide-react";
 import { Loader2 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -32,6 +32,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: "Dashboard", href: "/admin", icon: <LayoutDashboard size={20} /> },
     { label: "Orders", href: "/admin/orders", icon: <ShoppingCart size={20} /> },
     { label: "Products", href: "/admin/products", icon: <Package size={20} /> },
+    { label: "Returns & Refunds", href: "/admin/returns", icon: <RefreshCcw size={20} /> },
     { label: "AI Forecasting", href: "/admin/forecasting", icon: <TrendingUp size={20} /> },
     { label: "Coupon CMS", href: "/admin/coupons", icon: <Tag size={20} /> },
     { label: "Customers", href: "#", icon: <Users size={20} /> },

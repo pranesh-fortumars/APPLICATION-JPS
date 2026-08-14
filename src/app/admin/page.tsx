@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
 import { IndianRupee, ShoppingBag, Users } from "lucide-react";
 import Link from "next/link";
@@ -20,30 +19,17 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // Fetch Orders KPI
-        const ordersSnap = await getDocs(collection(db, "orders"));
-        let revenue = 0;
-        const orders = ordersSnap.docs.map(doc => {
-          const data = doc.data() as any;
-          revenue += (data.totalPrice || 0);
-          return { id: doc.id, ...data };
-        });
-
-        // Fetch Users KPI
-        const usersSnap = await getDocs(collection(db, "users"));
+        const response = await fetch('/api/admin/analytics');
+        const data = await response.json();
         
-        setKpis({
-          totalRevenue: revenue,
-          totalOrders: orders.length,
-          totalUsers: usersSnap.docs.length
-        });
-
-        // Recent Orders
-        orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        setRecentOrders(orders.slice(0, 5));
-
+        if (response.ok) {
+          setKpis(data.kpis);
+          setRecentOrders(data.recentOrders);
+        } else {
+          console.error("Failed to fetch analytics", data.error);
+        }
       } catch (error) {
-        console.error("Failed to fetch dashboard data", error);
+        console.error("Network error fetching analytics", error);
       } finally {
         setLoading(false);
       }

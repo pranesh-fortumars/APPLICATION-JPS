@@ -57,6 +57,14 @@ export default function AddProductPage() {
       };
 
       await setDoc(doc(db, "products", newProductId), productDoc);
+      
+      // Trigger Search Index Synchronization securely in the background
+      fetch('/api/products/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'index', productId: newProductId })
+      }).catch(err => console.error("Failed to sync search index", err));
+
       alert("Product successfully listed!");
       router.push("/seller/products");
     } catch (error) {
