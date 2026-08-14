@@ -21,7 +21,7 @@ export default function StyleFeedPage() {
   const [feedItems, setFeedItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeProduct, setActiveProduct] = useState<any | null>(null);
-  const addToCart = useCartStore(state => state.addToCart);
+  const addItem = useCartStore(state => state.addItem);
 
   useEffect(() => {
     const fetchFeed = async () => {
@@ -49,7 +49,7 @@ export default function StyleFeedPage() {
 
   const handleAddToCart = () => {
     if (activeProduct) {
-      addToCart(activeProduct, 1);
+      addItem({ product: activeProduct, quantity: 1, selectedVariant: activeProduct.variants?.[0] || null });
       setActiveProduct(null);
       alert("Added to cart!");
     }

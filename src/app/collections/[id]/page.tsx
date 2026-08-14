@@ -359,7 +359,7 @@ export default function ProductDetails() {
                 </div>
                 <div>
                   <h4 className="font-serif font-bold line-clamp-1">{product.name}</h4>
-                  <p className="text-xs text-primary/60 mt-1">Color: {selectedColor?.name || 'Default'}</p>
+                  <p className="text-xs text-primary/60 mt-1">Color: {selectedVariant?.color || 'Default'}</p>
                 </div>
               </div>
 

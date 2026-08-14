@@ -4,7 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
-import { LayoutDashboard, Package, ShoppingCart, PlusCircle, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, PlusCircle, Settings, LogOut, IndianRupee } from "lucide-react";
 import { Loader2 } from "lucide-react";
 
 export default function SellerLayout({ children }: { children: React.ReactNode }) {

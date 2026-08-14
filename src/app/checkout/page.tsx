@@ -251,7 +251,7 @@ export default function CheckoutPage() {
                     </div>
                     <div className="flex flex-col flex-1">
                       <p className="font-serif font-bold text-sm line-clamp-2">{item.product.name}</p>
-                      <p className="text-xs text-foreground/50 mt-1">{item.selectedColor || 'Default'} • {item.quantity}m</p>
+                      <p className="text-xs text-foreground/50 mt-1">{item.selectedVariant?.color || 'Default'} • {item.quantity}m</p>
                       <p className="mt-auto font-sans font-medium text-sm">₹{item.product.price * item.quantity}</p>
                     </div>
                   </div>

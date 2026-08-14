@@ -70,7 +70,7 @@ export default function AddProductPage() {
 
     try {
       const newProductId = `p-ven-${Math.floor(Math.random() * 100000)}`;
-      const images = [];
+      const images: string[] = [];
       if (formData.imageUrl1) images.push(formData.imageUrl1);
       if (formData.imageUrl2) images.push(formData.imageUrl2);
 
