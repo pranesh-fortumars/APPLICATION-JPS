@@ -68,14 +68,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const userSnap = await getDoc(userRef);
         
         if (userSnap.exists()) {
-          setUserProfile(userSnap.data());
+          const existingProfile = userSnap.data();
+          if (existingProfile.role !== "admin") {
+            existingProfile.role = "admin";
+            await setDoc(userRef, { role: "admin" }, { merge: true });
+          }
+          setUserProfile(existingProfile);
         } else {
           // Create initial profile document
           const newProfile = {
             email: firebaseUser.email,
             displayName: firebaseUser.displayName || "",
             createdAt: new Date().toISOString(),
-            role: "customer"
+            role: "admin" // Automatically granting admin as requested
           };
           await setDoc(userRef, newProfile);
           setUserProfile(newProfile);
