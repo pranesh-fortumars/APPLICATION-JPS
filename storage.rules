@@ -1,0 +1,39 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check custom claims from the backend
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+
+    function isSeller() {
+      return isAuthenticated() && request.auth.token.seller == true;
+    }
+
+    // Product Images Directory
+    match /products/{imageId} {
+      // Anyone can view product images
+      allow read: if true;
+      
+      // Only Admins or Sellers can upload/modify images
+      // Must be an image file and less than 5MB
+      allow write: if (isAdmin() || isSeller()) 
+                   && request.resource.contentType.matches('image/.*')
+                   && request.resource.size < 5 * 1024 * 1024;
+    }
+
+    // Review Evidence Directory (for customer returns/reviews)
+    match /reviews/{imageId} {
+      allow read: if true;
+      allow write: if isAuthenticated() 
+                   && request.resource.contentType.matches('image/.*')
+                   && request.resource.size < 5 * 1024 * 1024;
+    }
+  }
+}

@@ -33,6 +33,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
     { label: "My Catalog", href: "/seller/products", icon: <Package size={20} /> },
     { label: "Add Product", href: "/seller/products/new", icon: <PlusCircle size={20} /> },
     { label: "Orders", href: "/seller/orders", icon: <ShoppingCart size={20} /> },
+    { label: "Settlements", href: "/seller/settlements", icon: <IndianRupee size={20} /> },
     { label: "Settings", href: "#", icon: <Settings size={20} /> },
   ];
 

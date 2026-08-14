@@ -4,9 +4,10 @@ import { useState } from "react";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
 import { useAuth } from "@/context/AuthContext";
-import { ArrowLeft, Loader2, Upload } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import ImageUpload from "@/components/ImageUpload";
 
 export default function AddProductPage() {
   const { user, userProfile } = useAuth();
@@ -150,26 +151,22 @@ export default function AddProductPage() {
           </div>
 
           <div className="p-6 border border-black/10 bg-secondary/20 rounded-sm">
-            <h3 className="font-serif font-bold text-lg mb-4 flex items-center gap-2"><Upload size={18} /> Product Images</h3>
-            <p className="text-xs text-foreground/60 mb-4">For the beta, please provide public image URLs (e.g., from Unsplash or Imgur). We will add direct file uploads in a future phase.</p>
+            <h3 className="font-serif font-bold text-lg mb-4 flex items-center gap-2">Product Images</h3>
+            <p className="text-xs text-foreground/60 mb-4">Upload high-quality images of your product.</p>
             
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-widest mb-2 text-foreground/70">Main Image URL *</label>
-                <input 
-                  required type="url" value={formData.imageUrl1} onChange={e => setFormData({...formData, imageUrl1: e.target.value})}
-                  placeholder="https://..."
-                  className="w-full border border-black/10 px-4 py-3 text-sm outline-none focus:border-primary bg-white"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-widest mb-2 text-foreground/70">Hover/Alternate Image URL</label>
-                <input 
-                  type="url" value={formData.imageUrl2} onChange={e => setFormData({...formData, imageUrl2: e.target.value})}
-                  placeholder="https://..."
-                  className="w-full border border-black/10 px-4 py-3 text-sm outline-none focus:border-primary bg-white"
-                />
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <ImageUpload 
+                label="Main Image *" 
+                currentUrl={formData.imageUrl1} 
+                onUploadSuccess={(url) => setFormData({...formData, imageUrl1: url})} 
+                onRemove={() => setFormData({...formData, imageUrl1: ""})} 
+              />
+              <ImageUpload 
+                label="Hover/Alternate Image" 
+                currentUrl={formData.imageUrl2} 
+                onUploadSuccess={(url) => setFormData({...formData, imageUrl2: url})} 
+                onRemove={() => setFormData({...formData, imageUrl2: ""})} 
+              />
             </div>
           </div>
         </div>
