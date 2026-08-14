@@ -58,7 +58,7 @@ export default function AdminProductsPage() {
                 <th className="p-4 font-bold">Product</th>
                 <th className="p-4 font-bold">Category</th>
                 <th className="p-4 font-bold">Price</th>
-                <th className="p-4 font-bold">Stock</th>
+                <th className="p-4 font-bold min-w-[200px]">Warehouse Stock Distribution</th>
                 <th className="p-4 font-bold">Status</th>
                 <th className="p-4 font-bold text-right">Actions</th>
               </tr>
@@ -85,13 +85,27 @@ export default function AdminProductsPage() {
                     <td className="p-4 text-foreground/70">{product.category}</td>
                     <td className="p-4 font-medium">₹{product.price}</td>
                     <td className="p-4">
-                      <span className={`inline-block px-2 py-1 text-[10px] uppercase tracking-widest font-bold rounded-full ${
-                        product.availability === "In Stock" ? "bg-green-100 text-green-700" :
-                        product.availability === "Low Stock" ? "bg-orange-100 text-orange-700" :
-                        "bg-red-100 text-red-700"
-                      }`}>
-                        {product.availability}
-                      </span>
+                      {/* Simulated Multi-Warehouse Data */}
+                      <div className="space-y-2 text-xs">
+                        <div className="flex justify-between items-center bg-black/5 p-1 rounded-sm">
+                          <span className="font-bold opacity-60">Mumbai (Hub)</span>
+                          <span className={product.availability === "In Stock" ? "text-green-700 font-bold" : "text-orange-600 font-bold"}>
+                            {product.availability === "In Stock" ? "45m" : "5m"}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center bg-black/5 p-1 rounded-sm">
+                          <span className="font-bold opacity-60">Delhi</span>
+                          <span className={product.availability === "In Stock" ? "text-green-700 font-bold" : "text-red-600 font-bold"}>
+                            {product.availability === "In Stock" ? "12m" : "0m"}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center bg-black/5 p-1 rounded-sm">
+                          <span className="font-bold opacity-60">Bangalore</span>
+                          <span className={product.availability === "In Stock" ? "text-green-700 font-bold" : "text-orange-600 font-bold"}>
+                            {product.availability === "In Stock" ? "28m" : "2m"}
+                          </span>
+                        </div>
+                      </div>
                     </td>
                     <td className="p-4">
                       <span className="text-xs text-green-600 font-bold uppercase tracking-widest">Active</span>
