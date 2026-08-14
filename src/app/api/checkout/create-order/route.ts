@@ -24,9 +24,12 @@ export async function POST(req: NextRequest) {
       // 1. Read all variants to ensure they exist and have stock
       const variantDocs = await Promise.all(
         items.map(async (item: any) => {
-          // Assuming the new schema has a subcollection or array of variants
-          // For simplicity in this implementation, we query a 'variants' collection by SKU
-          const sku = item.sku || `${item.product.id}-${item.selectedColor}-${item.selectedSize}`;
+          // Enforce strict Variant usage
+          const sku = item.selectedVariant?.sku;
+          if (!sku) {
+            throw new Error(`Item ${item.product.name} is missing a selected variant SKU.`);
+          }
+          
           const variantRef = adminDb.collection('variants').doc(sku);
           const variantSnap = await transaction.get(variantRef);
           
@@ -71,9 +74,17 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      const finalAmount = subtotal - discountAmount;
+      // 5. Formal GST Architecture (e.g., 5% total tax for fabrics: 2.5% CGST, 2.5% SGST)
+      const discountedSubtotal = subtotal - discountAmount;
+      const gstRate = 0.05; // 5% GST
+      const totalGST = discountedSubtotal * gstRate;
+      const cgst = totalGST / 2;
+      const sgst = totalGST / 2;
+      const shipping = discountedSubtotal > 2000 ? 0 : 150; // Free shipping over 2000
+      
+      const finalAmount = discountedSubtotal + totalGST + shipping;
 
-      // 5. Create Order Document in pending state
+      // 6. Create Order Document in pending state
       transaction.set(orderRef, {
         orderId: readableOrderId,
         userId: userId || null,
@@ -82,7 +93,12 @@ export async function POST(req: NextRequest) {
         items, // store requested items snapshot
         subtotal,
         discount: discountAmount,
-        couponCode: couponCode || null,
+        taxableAmount: discountedSubtotal,
+        gstRate: "5%",
+        cgst,
+        sgst,
+        totalTax: totalGST,
+        shippingFee: shipping,
         totalPrice: finalAmount,
         status: 'PAYMENT_PENDING', // Wait for webhook
         createdAt: new Date().toISOString()

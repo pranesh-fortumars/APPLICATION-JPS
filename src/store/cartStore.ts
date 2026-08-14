@@ -5,8 +5,7 @@ import { Product } from "@/lib/mockData";
 export interface CartItem {
   product: Product;
   quantity: number;
-  selectedColor?: string;
-  selectedLength?: number; // In meters
+  selectedVariant?: any; // The full variant document
 }
 
 interface CartState {
@@ -25,7 +24,10 @@ interface CartState {
 const calculateTotals = (items: CartItem[]) => {
   return {
     totalItems: items.reduce((total, item) => total + item.quantity, 0),
-    totalPrice: items.reduce((total, item) => total + item.product.price * item.quantity, 0),
+    totalPrice: items.reduce((total, item) => {
+      const price = item.selectedVariant ? item.selectedVariant.price : item.product.price;
+      return total + price * item.quantity;
+    }, 0),
   };
 };
 
@@ -40,7 +42,7 @@ export const useCartStore = create<CartState>()(
       addItem: (item) => {
         set((state) => {
           const existingItemIndex = state.items.findIndex(
-            (i) => i.product.id === item.product.id
+            (i) => i.product.id === item.product.id && (i.selectedVariant?.id === item.selectedVariant?.id)
           );
 
           let newItems;
@@ -59,16 +61,16 @@ export const useCartStore = create<CartState>()(
         });
       },
 
-      removeItem: (productId) =>
+      removeItem: (skuId) =>
         set((state) => {
-          const newItems = state.items.filter((item) => item.product.id !== productId);
+          const newItems = state.items.filter((item) => (item.selectedVariant ? item.selectedVariant.sku : item.product.id) !== skuId);
           return { items: newItems, ...calculateTotals(newItems) };
         }),
 
-      updateQuantity: (productId, quantity) =>
+      updateQuantity: (skuId, quantity) =>
         set((state) => {
           const newItems = state.items.map((item) =>
-            item.product.id === productId ? { ...item, quantity } : item
+            (item.selectedVariant ? item.selectedVariant.sku : item.product.id) === skuId ? { ...item, quantity } : item
           );
           return { items: newItems, ...calculateTotals(newItems) };
         }),

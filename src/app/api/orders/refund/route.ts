@@ -45,7 +45,9 @@ export async function POST(req: NextRequest) {
 
       // 2. Restore Inventory
       for (const item of orderData.items || []) {
-        const sku = item.sku || `${item.product.id}-${item.selectedColor}-${item.selectedSize}`;
+        const sku = item.selectedVariant?.sku;
+        if (!sku) continue; // Skip items missing a strict SKU variant
+        
         const variantRef = adminDb.collection('variants').doc(sku);
         const variantSnap = await transaction.get(variantRef);
         

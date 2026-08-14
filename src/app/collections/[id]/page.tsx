@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
 import { useWishlistStore } from "@/store/wishlistStore";
 import ProductReviews from "@/components/ProductReviews";
@@ -41,7 +41,8 @@ export default function ProductDetails() {
   const [relatedProds, setRelatedProds] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   
-  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+  const [variants, setVariants] = useState<any[]>([]);
+  const [selectedVariant, setSelectedVariant] = useState<any>(null);
   const [isSwatchModalOpen, setIsSwatchModalOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -56,6 +57,15 @@ export default function ProductDetails() {
           const prodData = { id: docSnap.id, ...docSnap.data() } as Product;
           setProduct(prodData);
           
+          // Fetch variants
+          const q = query(collection(db, "variants"), where("productId", "==", id), where("status", "==", "Active"));
+          const variantsSnap = await getDocs(q);
+          const fetchedVariants = variantsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setVariants(fetchedVariants);
+          if (fetchedVariants.length > 0) {
+            setSelectedVariant(fetchedVariants[0]);
+          }
+
           // Fetch related products
           if (prodData.relatedProducts && prodData.relatedProducts.length > 0) {
             const relatedPromises = prodData.relatedProducts.map(relId => getDoc(doc(db, "products", relId)));
@@ -92,9 +102,7 @@ export default function ProductDetails() {
     return notFound();
   }
 
-  const selectedColor = product.colorVariants ? product.colorVariants[selectedColorIndex] : null;
-  const mainImageIndex = selectedColor ? selectedColor.imageIndex : 0;
-  const mainImage = product.images[mainImageIndex] || product.images[0];
+  const mainImage = product.images[0] || "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?w=800";
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
@@ -104,7 +112,7 @@ export default function ProductDetails() {
   };
 
   const whatsappUrl = `https://wa.me/918939695455?text=${encodeURIComponent(
-    `Hello JPS Fabrics,\n\nI am interested in:\nProduct: ${product.name}\nSKU: ${product.sku}\nColor: ${selectedColor?.name || 'Default'}\n\nPlease share availability and pricing.`
+    `Hello JPS Fabrics,\n\nI am interested in:\nProduct: ${product.name}\nVariant: ${selectedVariant?.sku || product.sku}\nColor: ${selectedVariant?.color || 'Default'}\n\nPlease share availability and pricing.`
   )}`;
 
   return (
@@ -148,12 +156,8 @@ export default function ProductDetails() {
                 {product.images.map((img, i) => (
                   <button 
                     key={i}
-                    onClick={() => {
-                      // Attempt to map thumbnail back to color variant
-                      const cvIndex = product.colorVariants?.findIndex(cv => cv.imageIndex === i);
-                      if (cvIndex !== -1 && cvIndex !== undefined) setSelectedColorIndex(cvIndex);
-                    }}
-                    className={`relative aspect-square w-full bg-secondary rounded-sm overflow-hidden border-2 transition-colors ${mainImageIndex === i ? 'border-primary' : 'border-transparent'}`}
+                    onClick={() => {}} // Thumbnail logic simplified
+                    className={`relative aspect-square w-full bg-secondary rounded-sm overflow-hidden border-2 transition-colors border-transparent hover:border-primary`}
                   >
                     <Image src={img} alt={`${product.name} view ${i+1}`} fill sizes="25vw" className="object-cover hover:scale-105 transition-transform" />
                   </button>
@@ -179,46 +183,55 @@ export default function ProductDetails() {
             </div>
 
             <div className="mb-2 text-xs font-bold tracking-widest text-primary/50 uppercase">
-              SKU: {product.sku}
+              SKU: {selectedVariant ? selectedVariant.sku : product.sku}
             </div>
 
             <h1 className="font-serif text-4xl md:text-5xl font-bold text-primary mb-4 leading-tight">
               {product.name}
             </h1>
             
-            <p className="text-2xl text-accent font-sans mb-8">₹{product.price} <span className="text-sm text-primary/40 font-light">per meter</span></p>
+            <p className="text-2xl text-accent font-sans mb-8">₹{selectedVariant ? selectedVariant.price : product.price} <span className="text-sm text-primary/40 font-light">per meter</span></p>
 
             <div className="h-px w-full bg-black/5 mb-8"></div>
 
-            {/* Color Explorer */}
-            {product.colorVariants && product.colorVariants.length > 0 && (
+            {/* Variant Explorer */}
+            {variants && variants.length > 0 && (
               <div className="mb-8">
                 <p className="text-sm font-sans font-semibold uppercase tracking-widest text-primary/70 mb-4">
-                  Color: <span className="text-primary">{selectedColor?.name}</span>
+                  Variant: <span className="text-primary">{selectedVariant?.color} - {selectedVariant?.size}</span>
                 </p>
-                <div className="flex gap-4">
-                  {product.colorVariants.map((color, idx) => (
+                <div className="flex flex-wrap gap-4">
+                  {variants.map((variant) => (
                     <button
-                      key={color.hex}
-                      onClick={() => setSelectedColorIndex(idx)}
-                      className={`w-10 h-10 rounded-full border-2 transition-all ${selectedColorIndex === idx ? 'border-primary scale-110 shadow-md' : 'border-black/10 hover:border-primary/50'}`}
-                      style={{ backgroundColor: color.hex }}
-                      title={color.name}
-                      aria-label={`Select ${color.name}`}
-                    />
+                      key={variant.id}
+                      onClick={() => setSelectedVariant(variant)}
+                      className={`px-4 py-2 border-2 transition-all text-sm font-bold uppercase tracking-widest ${selectedVariant?.id === variant.id ? 'border-primary bg-primary text-white shadow-md' : 'border-black/10 hover:border-primary/50 text-primary'}`}
+                    >
+                      {variant.color} - {variant.size}
+                    </button>
                   ))}
                 </div>
+                {selectedVariant && (
+                  <p className={`mt-2 text-xs font-bold uppercase tracking-widest ${selectedVariant.stock > 0 ? 'text-green-600' : 'text-red-500'}`}>
+                    {selectedVariant.stock > 0 ? `${selectedVariant.stock} in stock` : 'Out of stock'}
+                  </p>
+                )}
               </div>
             )}
 
             {/* Actions */}
             <div className="flex flex-col gap-4 mb-8">
               <button 
-                onClick={() => addItem({ product, quantity: 1, selectedColor: selectedColor?.name })}
-                className="w-full py-4 bg-primary text-white font-sans font-semibold uppercase tracking-widest text-sm hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 shadow-ambient"
+                disabled={selectedVariant?.stock === 0}
+                onClick={() => {
+                  if (selectedVariant) {
+                     addItem({ product, quantity: 1, selectedVariant }); // Assuming we update cartStore to handle selectedVariant
+                  }
+                }}
+                className="w-full py-4 bg-primary text-white font-sans font-semibold uppercase tracking-widest text-sm hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 shadow-ambient disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ShoppingBag size={18} />
-                Add to Cart
+                {selectedVariant?.stock === 0 ? "Out of Stock" : "Add to Cart"}
               </button>
               <div className="flex gap-4">
                 <button 

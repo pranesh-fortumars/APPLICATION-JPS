@@ -9,9 +9,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'UID and role are required' }, { status: 400 });
     }
 
-    // In a production environment, this endpoint MUST be protected by a Super Admin claim.
-    // For now, we allow setting claims to secure the app against the immediate threat.
+    // SECURE THE ENDPOINT: Require Super Admin auth
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const token = authHeader.split('Bearer ')[1];
+    const decodedToken = await adminAuth.verifyIdToken(token);
     
+    // Only super_admin or admin can set roles
+    if (!decodedToken.super_admin && !decodedToken.admin) {
+      return NextResponse.json({ error: 'Forbidden: Insufficient privileges' }, { status: 403 });
+    }
+
     let claims: any = {};
     if (role === 'admin') {
       claims = { admin: true };
