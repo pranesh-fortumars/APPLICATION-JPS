@@ -7,25 +7,72 @@ import Link from "next/link";
 import { Check, ShieldCheck, ChevronRight, Lock } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useAuth } from "@/context/AuthContext";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase/config";
 
 export default function CheckoutPage() {
-  const { items, totalPrice, clearCart } = useCartStore();
+  const { items, totalPrice, clearCart, totalItems } = useCartStore();
+  const { user, userProfile } = useAuth();
   const [step, setStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [orderId, setOrderId] = useState("");
 
   const [formData, setFormData] = useState({
-    email: "", phone: "", firstName: "", lastName: "",
+    email: user?.email || "", 
+    phone: "", 
+    firstName: userProfile?.displayName?.split(" ")[0] || "", 
+    lastName: userProfile?.displayName?.split(" ").slice(1).join(" ") || "",
     address: "", city: "", state: "", pincode: ""
   });
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     setIsProcessing(true);
-    // Simulate Razorpay window
-    setTimeout(() => {
-      setIsProcessing(false);
-      setIsSuccess(true);
-      clearCart();
+    
+    // Simulate Razorpay window delay
+    setTimeout(async () => {
+      const newOrderId = `JPS-${Math.floor(Math.random() * 1000000)}`;
+      setOrderId(newOrderId);
+      
+      try {
+        await setDoc(doc(db, "orders", newOrderId), {
+          orderId: newOrderId,
+          userId: user?.uid || null,
+          contact: {
+            email: formData.email,
+            phone: formData.phone,
+            firstName: formData.firstName,
+            lastName: formData.lastName
+          },
+          shipping: {
+            address: formData.address,
+            city: formData.city,
+            state: formData.state,
+            pincode: formData.pincode
+          },
+          items: items,
+          totalItems: totalItems,
+          totalPrice: totalPrice,
+          status: "Paid & Processing",
+          createdAt: new Date().toISOString()
+        });
+
+        // Clear local cart
+        clearCart();
+        
+        // If user is logged in, clear cloud cart as well
+        if (user) {
+          await setDoc(doc(db, "carts", user.uid), { items: [], totalItems: 0, totalPrice: 0 }, { merge: true });
+        }
+
+        setIsSuccess(true);
+      } catch (error) {
+        console.error("Failed to place order:", error);
+        alert("Failed to place order. Please try again.");
+      } finally {
+        setIsProcessing(false);
+      }
     }, 2000);
   };
 
@@ -39,7 +86,7 @@ export default function CheckoutPage() {
           </motion.div>
           <h1 className="font-serif text-4xl md:text-5xl font-bold text-primary mb-4">Order Confirmed!</h1>
           <p className="text-foreground/70 font-sans max-w-md mx-auto mb-8">
-            Thank you for shopping with JPS Fabrics. Your order #JPS-{Math.floor(Math.random() * 100000)} has been placed successfully. We've sent a confirmation email to {formData.email}.
+            Thank you for shopping with JPS Fabrics. Your order #{orderId} has been placed successfully. We've sent a confirmation email to {formData.email}.
           </p>
           <Link href="/" className="px-8 py-4 bg-primary text-white font-bold uppercase tracking-widest text-sm hover:bg-primary/90 transition-colors">
             Return to Boutique

@@ -15,6 +15,7 @@ interface CartState {
   addItem: (item: CartItem) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
+  setCart: (items: CartItem[]) => void;
   toggleCart: () => void;
   clearCart: () => void;
   totalItems: number;
@@ -71,6 +72,8 @@ export const useCartStore = create<CartState>()(
           );
           return { items: newItems, ...calculateTotals(newItems) };
         }),
+
+      setCart: (items) => set({ items, ...calculateTotals(items) }),
 
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
 
