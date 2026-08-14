@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import Link from "next/link";
-import { Menu, X, Search, ShoppingBag } from "lucide-react";
+import { Menu, X, Search, ShoppingBag, User as UserIcon, LogOut } from "lucide-react";
 import SmartSearch from "@/components/SmartSearch";
 import { useCartStore } from "@/store/cartStore";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
   const { scrollY } = useScroll();
@@ -13,6 +14,7 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { toggleCart, totalItems } = useCartStore();
+  const { user, logout } = useAuth();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50);
@@ -69,6 +71,36 @@ export default function Navbar() {
             <Search size={20} />
           </button>
           
+          {user ? (
+            <div className="relative group cursor-pointer flex items-center gap-2 text-foreground hover:text-accent transition-colors">
+              <UserIcon size={20} />
+              <div className="absolute top-full right-0 mt-4 w-48 bg-background border border-border shadow-xl rounded-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                <div className="px-4 py-3 border-b border-border text-sm font-medium">
+                  Hi, {user.displayName || "User"}
+                </div>
+                <Link href="/profile" className="block px-4 py-2 text-sm hover:bg-accent/10 hover:text-accent transition-colors">
+                  My Profile
+                </Link>
+                <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-accent/10 hover:text-accent transition-colors">
+                  Orders
+                </Link>
+                <button 
+                  onClick={logout}
+                  className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors flex items-center gap-2"
+                >
+                  <LogOut size={14} /> Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <Link 
+              href="/login"
+              className="text-foreground hover:text-accent transition-colors flex items-center gap-2"
+            >
+              <UserIcon size={20} />
+            </Link>
+          )}
+          
           <button 
             aria-label="Cart"
             onClick={toggleCart}
@@ -96,6 +128,11 @@ export default function Navbar() {
           <button aria-label="Search" onClick={() => setIsSearchOpen(true)}>
             <Search size={24} />
           </button>
+          
+          <Link href={user ? "/profile" : "/login"}>
+            <UserIcon size={24} />
+          </Link>
+
           <button aria-label="Cart" onClick={toggleCart} className="relative">
             <ShoppingBag size={24} />
             {totalItems > 0 && (

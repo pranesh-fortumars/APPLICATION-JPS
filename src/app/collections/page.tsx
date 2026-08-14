@@ -6,8 +6,10 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { mockProducts, Category, Material } from "@/lib/mockData";
-import { Filter, X, Search } from "lucide-react";
+import { Category, Material, Product } from "@/lib/mockData";
+import { Filter, X, Search, Loader2 } from "lucide-react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase/config";
 
 const CATEGORIES: Category[] = ["Womens Fabrics", "Lining Materials", "Falls", "New Arrivals", "Designer Collection"];
 const MATERIALS: Material[] = ["Cotton", "Silk", "Rayon", "Chiffon", "Georgette", "Crepe"];
@@ -23,6 +25,29 @@ function CollectionsContent() {
   const [maxPrice, setMaxPrice] = useState<number>(10000);
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch products from Firestore
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        const fetchedProducts: Product[] = [];
+        querySnapshot.forEach((doc) => {
+          fetchedProducts.push({ id: doc.id, ...doc.data() } as Product);
+        });
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   // Update URL when category changes, or sync state when URL changes
   useEffect(() => {
@@ -46,14 +71,14 @@ function CollectionsContent() {
 
   // Instant filtering logic
   const filteredProducts = useMemo(() => {
-    return mockProducts.filter((product) => {
+    return products.filter((product) => {
       const matchCategory = selectedCategory === "All" || product.category.includes(selectedCategory);
       const matchMaterial = selectedMaterial === "All" || product.material === selectedMaterial;
       const matchSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
       const matchPrice = product.price <= maxPrice;
       return matchCategory && matchMaterial && matchSearch && matchPrice;
     });
-  }, [selectedCategory, selectedMaterial, searchQuery, maxPrice]);
+  }, [products, selectedCategory, selectedMaterial, searchQuery, maxPrice]);
 
   const FilterSidebar = () => (
     <div className="flex flex-col gap-8 w-full md:w-64 shrink-0">
@@ -214,11 +239,16 @@ function CollectionsContent() {
         <div className="flex-1 w-full">
           <div className="flex justify-between items-center mb-8 pb-4 border-b border-black/10 dark:border-white/10">
             <p className="text-sm font-medium text-foreground/60 uppercase tracking-wider">
-              Showing {filteredProducts.length} Products
+              {loading ? "Loading Products..." : `Showing ${filteredProducts.length} Products`}
             </p>
           </div>
 
-          {filteredProducts.length > 0 ? (
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-32 text-center text-foreground/50">
+              <Loader2 className="w-12 h-12 animate-spin mb-4 text-primary" />
+              <p className="text-lg font-serif">Loading luxury fabrics from database...</p>
+            </div>
+          ) : filteredProducts.length > 0 ? (
             <motion.div 
               layout
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-12"

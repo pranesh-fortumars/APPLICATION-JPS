@@ -1,16 +1,18 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { mockProducts, Product } from "@/lib/mockData";
+import { Product } from "@/lib/mockData";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "@/store/cartStore";
 import { ShoppingBag, Heart, Share2, Ruler, Weight, ShieldCheck, Scissors, MessageCircle } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase/config";
 
 // Helper for dot ratings
 const DotRating = ({ rating, max = 5, label }: { rating: number, max?: number, label: string }) => (
@@ -30,13 +32,58 @@ const DotRating = ({ rating, max = 5, label }: { rating: number, max?: number, l
 export default function ProductDetails() {
   const params = useParams();
   const id = params.id as string;
-  const product = mockProducts.find((p) => p.id === id);
   const { addItem } = useCartStore();
+  
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProds, setRelatedProds] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [isSwatchModalOpen, setIsSwatchModalOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const docRef = doc(db, "products", id);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          const prodData = { id: docSnap.id, ...docSnap.data() } as Product;
+          setProduct(prodData);
+          
+          // Fetch related products
+          if (prodData.relatedProducts && prodData.relatedProducts.length > 0) {
+            const relatedPromises = prodData.relatedProducts.map(relId => getDoc(doc(db, "products", relId)));
+            const relatedSnaps = await Promise.all(relatedPromises);
+            const fetchedRelated = relatedSnaps
+              .filter(snap => snap.exists())
+              .map(snap => ({ id: snap.id, ...snap.data() } as Product));
+            setRelatedProds(fetchedRelated);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-xl font-serif animate-pulse">Loading luxury fabric...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!product) {
     return notFound();
@@ -245,23 +292,19 @@ export default function ProductDetails() {
         </div>
 
         {/* Complete the Look Section */}
-        {product.relatedProducts && product.relatedProducts.length > 0 && (
+        {relatedProds.length > 0 && (
           <div className="max-w-[1440px] mx-auto px-6 md:px-20 py-24 border-t border-black/5">
             <h2 className="font-serif text-3xl font-bold text-primary mb-12 text-center">Complete The Look</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-              {product.relatedProducts.map(relatedId => {
-                const relatedProd = mockProducts.find(p => p.id === relatedId);
-                if (!relatedProd) return null;
-                return (
-                  <Link key={relatedId} href={`/collections/${relatedId}`} className="group block">
-                    <div className="relative aspect-[3/4] bg-secondary overflow-hidden mb-4 rounded-sm">
-                      <Image src={relatedProd.images[0]} alt={relatedProd.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                    </div>
-                    <h4 className="font-serif font-bold text-lg text-primary line-clamp-1">{relatedProd.name}</h4>
-                    <p className="font-sans text-accent font-medium mt-1">₹{relatedProd.price}</p>
-                  </Link>
-                );
-              })}
+              {relatedProds.map(relatedProd => (
+                <Link key={relatedProd.id} href={`/collections/${relatedProd.id}`} className="group block">
+                  <div className="relative aspect-[3/4] bg-secondary overflow-hidden mb-4 rounded-sm">
+                    <Image src={relatedProd.images[0]} alt={relatedProd.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                  </div>
+                  <h4 className="font-serif font-bold text-lg text-primary line-clamp-1">{relatedProd.name}</h4>
+                  <p className="font-sans text-accent font-medium mt-1">₹{relatedProd.price}</p>
+                </Link>
+              ))}
             </div>
           </div>
         )}
