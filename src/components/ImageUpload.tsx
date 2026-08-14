@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/firestore"; // oops, firebase/storage
 import { app } from "@/lib/firebase/config";
-import { getStorage as getFirebaseStorage } from "firebase/storage";
+import { getStorage as getFirebaseStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { Upload, X, Loader2, Image as ImageIcon } from "lucide-react";
 
 const storage = getFirebaseStorage(app);
