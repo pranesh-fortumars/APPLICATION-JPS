@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, X } from "lucide-react";
+import { Search, X, Camera, Loader2 } from "lucide-react";
 import { mockProducts } from "@/lib/mockData";
 import Link from "next/link";
 import Image from "next/image";
@@ -14,7 +14,17 @@ interface SmartSearchProps {
 
 export default function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
   const [query, setQuery] = useState("");
+  const [isScanning, setIsScanning] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const simulateVisualSearch = () => {
+    setIsScanning(true);
+    // Simulate image upload and AI visual processing delay
+    setTimeout(() => {
+      setIsScanning(false);
+      setQuery("Silk"); // Simulating the AI recognizing a silk fabric
+    }, 2500);
+  };
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -49,13 +59,32 @@ export default function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
                   onChange={(e) => setQuery(e.target.value)}
                   className="w-full bg-transparent text-2xl font-serif outline-none placeholder:text-primary/30"
                 />
+                <button 
+                  onClick={simulateVisualSearch}
+                  className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-foreground/50 hover:text-primary"
+                  title="Search by Image"
+                >
+                  <Camera size={24} />
+                  <span className="hidden md:inline">Visual Search</span>
+                </button>
               </div>
-              <button onClick={onClose} className="text-foreground hover:text-accent transition-colors ml-4">
+              <button onClick={onClose} className="text-foreground hover:text-accent transition-colors ml-4 shrink-0">
                 <X size={32} />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto py-12">
+            <div className="flex-1 overflow-y-auto py-12 relative">
+              {isScanning && (
+                <div className="absolute inset-0 z-10 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center">
+                  <div className="relative">
+                    <Camera size={48} className="text-primary/20" />
+                    <div className="absolute inset-0 bg-primary/20 animate-ping rounded-full" />
+                  </div>
+                  <p className="mt-6 font-serif text-xl animate-pulse">Scanning image for visual matches...</p>
+                  <p className="text-xs uppercase tracking-widest text-foreground/50 mt-2">JPS Vision AI</p>
+                </div>
+              )}
+
               {query.length <= 1 ? (
                 <div className="flex flex-col gap-6">
                   <h3 className="text-xs uppercase tracking-widest font-semibold text-foreground/50">Trending Searches</h3>

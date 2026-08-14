@@ -5,6 +5,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import MiniCart from "@/components/MiniCart";
 import CustomCursor from "@/components/CustomCursor";
+import AIStylist from "@/components/AIStylist";
 import { AuthProvider } from "@/context/AuthContext";
 
 const playfair = Cormorant_Garamond({
@@ -64,6 +65,7 @@ export default function RootLayout({
             <CustomCursor />
             {children}
             <MiniCart />
+            <AIStylist />
             <FloatingWhatsApp />
           </SmoothScroll>
         </AuthProvider>

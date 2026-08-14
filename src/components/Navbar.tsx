@@ -23,6 +23,7 @@ export default function Navbar() {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Collections", href: "/collections" },
+    { name: "Style Feed", href: "/feed" },
     { name: "Women's Fabrics", href: "/collections?category=Womens Fabrics" },
     { name: "Lining", href: "/collections?category=Lining Materials" },
     { name: "Falls", href: "/collections?category=Falls" },
