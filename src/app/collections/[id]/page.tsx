@@ -13,6 +13,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
+import { useWishlistStore } from "@/store/wishlistStore";
+import ProductReviews from "@/components/ProductReviews";
 
 // Helper for dot ratings
 const DotRating = ({ rating, max = 5, label }: { rating: number, max?: number, label: string }) => (
@@ -33,6 +35,7 @@ export default function ProductDetails() {
   const params = useParams();
   const id = params.id as string;
   const { addItem } = useCartStore();
+  const { toggleItem, isInWishlist } = useWishlistStore();
   
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProds, setRelatedProds] = useState<Product[]>([]);
@@ -218,6 +221,13 @@ export default function ProductDetails() {
                 Add to Cart
               </button>
               <div className="flex gap-4">
+                <button 
+                  onClick={() => toggleItem(product)}
+                  className="w-14 py-4 bg-transparent border border-black/10 text-primary flex items-center justify-center hover:bg-black/5 transition-colors shrink-0"
+                  aria-label={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                >
+                  <Heart size={20} className={isInWishlist(product.id) ? "fill-red-500 text-red-500" : ""} />
+                </button>
                 <Link 
                   href={whatsappUrl}
                   target="_blank"
@@ -288,6 +298,9 @@ export default function ProductDetails() {
                 </div>
               )}
             </div>
+
+            {/* Product Reviews */}
+            <ProductReviews productId={product.id} />
           </motion.div>
         </div>
 

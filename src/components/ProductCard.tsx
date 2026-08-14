@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import { Product } from "@/lib/mockData";
-import { ShoppingBag, Eye, MessageCircle } from "lucide-react";
+import { ShoppingBag, Eye, MessageCircle, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useCartStore } from "@/store/cartStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 
 interface ProductCardProps {
   product: Product;
@@ -13,6 +14,8 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCartStore();
+  const { toggleItem, isInWishlist } = useWishlistStore();
+  const isSaved = isInWishlist(product.id);
 
   // Use the WhatsApp link for enquiries
   const whatsappUrl = `https://wa.me/918939695455?text=${encodeURIComponent(
@@ -63,6 +66,15 @@ export default function ProductCard({ product }: ProductCardProps) {
             </span>
           )}
         </div>
+
+        {/* Wishlist Button */}
+        <button
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleItem(product); }}
+          className={`absolute top-4 right-4 z-20 w-8 h-8 rounded-full flex items-center justify-center bg-white/80 backdrop-blur-sm shadow-sm transition-colors hover:bg-white ${isSaved ? 'text-red-500' : 'text-primary/50 hover:text-primary'}`}
+          aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
+        >
+          <Heart size={16} className={isSaved ? "fill-red-500" : ""} />
+        </button>
 
         {/* Quick Actions Overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out bg-gradient-to-t from-dark/90 to-transparent flex flex-col gap-2 z-20 pointer-events-auto">

@@ -5,6 +5,7 @@ import { User, onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "@/lib/firebase/config";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useCartStore } from "@/store/cartStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 import { useRef } from "react";
 
 interface AuthContextType {
@@ -26,6 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userProfile, setUserProfile] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const isSyncingCart = useRef(false);
+  const isSyncingWishlist = useRef(false);
 
   // Subscribe to local cart changes to save to cloud
   useEffect(() => {
@@ -36,6 +38,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           items: state.items,
           totalItems: state.totalItems,
           totalPrice: state.totalPrice,
+          updatedAt: new Date().toISOString()
+        }, { merge: true }).catch(console.error);
+      }
+    });
+    return unsub;
+  }, [user]);
+
+  // Subscribe to local wishlist changes to save to cloud
+  useEffect(() => {
+    const unsub = useWishlistStore.subscribe((state, prevState) => {
+      if (user && !isSyncingWishlist.current && state.items !== prevState.items) {
+        setDoc(doc(db, "wishlists", user.uid), {
+          items: state.items,
           updatedAt: new Date().toISOString()
         }, { merge: true }).catch(console.error);
       }
@@ -83,10 +98,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.error("Failed to fetch cart", e);
         }
 
+        // Fetch user wishlist
+        try {
+          const wishlistRef = doc(db, "wishlists", firebaseUser.uid);
+          const wishlistSnap = await getDoc(wishlistRef);
+          if (wishlistSnap.exists()) {
+            const data = wishlistSnap.data();
+            if (data.items) {
+              isSyncingWishlist.current = true;
+              useWishlistStore.getState().setWishlist(data.items);
+              setTimeout(() => { isSyncingWishlist.current = false; }, 100);
+            }
+          }
+        } catch(e) {
+          console.error("Failed to fetch wishlist", e);
+        }
+
       } else {
         setUserProfile(null);
-        // Clear cart on logout
+        // Clear cart and wishlist on logout
         useCartStore.getState().clearCart();
+        useWishlistStore.getState().clearWishlist();
       }
       
       setLoading(false);
