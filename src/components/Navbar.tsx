@@ -191,10 +191,10 @@ export default function Navbar() {
                   <div className="px-4 py-3 border-b border-black/5 text-sm font-bold truncate">
                     Hi, {user.displayName || "User"}
                   </div>
-                  <Link href="/account" className="block px-4 py-2 text-sm hover:bg-black/5 transition-colors">
+                  <Link href="/profile" className="block px-4 py-2 text-sm hover:bg-black/5 transition-colors">
                     My Account
                   </Link>
-                  <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-black/5 transition-colors">
+                  <Link href="/profile/orders" className="block px-4 py-2 text-sm hover:bg-black/5 transition-colors">
                     Orders & Returns
                   </Link>
                   <button 
@@ -281,7 +281,7 @@ export default function Navbar() {
                 <div className="p-6 border-t border-black/5 bg-secondary flex flex-col gap-4 mt-auto">
                   {user ? (
                     <>
-                      <Link href="/account" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 font-medium uppercase text-xs tracking-widest">
+                      <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 font-medium uppercase text-xs tracking-widest">
                         <UserIcon size={18} /> My Account
                       </Link>
                       <Link href="/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 font-medium uppercase text-xs tracking-widest">

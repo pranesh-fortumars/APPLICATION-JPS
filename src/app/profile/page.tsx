@@ -159,7 +159,7 @@ export default function ProfilePage() {
                 {/* Active Perks */}
                 <div>
                   <h3 className="font-serif text-2xl font-bold mb-6">Your Active Perks</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
                     {currentTier.perks.map((perk, idx) => (
                       <div key={idx} className="p-4 bg-white border border-black/10 rounded-sm shadow-sm flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0">
@@ -172,6 +172,45 @@ export default function ProfilePage() {
                     ))}
                   </div>
                 </div>
+                
+                {/* Personal Information */}
+                <div className="border-t border-black/10 pt-12">
+                  <h3 className="font-serif text-2xl font-bold mb-6">Personal Information</h3>
+                  <form className="space-y-6 max-w-2xl" onSubmit={(e) => { e.preventDefault(); alert('Profile updated successfully!'); }}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-widest text-primary/70 mb-2">Full Name</label>
+                        <input type="text" defaultValue={userProfile?.displayName || ""} className="w-full p-4 border border-black/10 bg-transparent focus:border-primary outline-none" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-widest text-primary/70 mb-2">Email Address</label>
+                        <input type="email" defaultValue={user.email || ""} disabled className="w-full p-4 border border-black/5 bg-black/5 text-primary/60 outline-none cursor-not-allowed" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-primary/70 mb-2">Phone Number</label>
+                      <input type="tel" placeholder="+91" className="w-full p-4 border border-black/10 bg-transparent focus:border-primary outline-none" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-primary/70 mb-2">Default Shipping Address</label>
+                      <textarea placeholder="House No, Street, Area" rows={3} className="w-full p-4 border border-black/10 bg-transparent focus:border-primary outline-none resize-none"></textarea>
+                    </div>
+                    <div className="grid grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-widest text-primary/70 mb-2">City</label>
+                        <input type="text" className="w-full p-4 border border-black/10 bg-transparent focus:border-primary outline-none" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-widest text-primary/70 mb-2">Pincode</label>
+                        <input type="text" className="w-full p-4 border border-black/10 bg-transparent focus:border-primary outline-none" />
+                      </div>
+                    </div>
+                    <button type="submit" className="px-8 py-4 bg-primary text-white font-bold uppercase tracking-widest text-sm hover:bg-primary/90 transition-colors shadow-ambient">
+                      Save Changes
+                    </button>
+                  </form>
+                </div>
+
               </div>
             )}
           </div>

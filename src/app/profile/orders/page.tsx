@@ -159,9 +159,17 @@ export default function OrdersPage() {
                       <ShieldCheck size={16} className="text-primary" />
                       Shipped to: {order.shipping.city}, {order.shipping.state} - {order.shipping.pincode}
                     </div>
-                    <Link href={`/contact?order=${order.orderId}`} className="text-sm text-primary font-bold hover:underline">
-                      Need Help?
-                    </Link>
+                    <div className="flex items-center gap-4">
+                      <button 
+                        onClick={() => alert(`Return/Exchange requested for order ${order.orderId}. Our team will contact you shortly.`)}
+                        className="text-sm border border-black/10 px-4 py-2 hover:bg-black/5 transition-colors font-bold uppercase tracking-widest text-primary/70"
+                      >
+                        Return / Exchange
+                      </button>
+                      <Link href={`/contact?order=${order.orderId}`} className="text-sm text-primary font-bold hover:underline">
+                        Need Help?
+                      </Link>
+                    </div>
                   </div>
                 </div>
 
