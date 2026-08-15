@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "@/store/cartStore";
+import { mockProducts } from "@/lib/mockData";
 
 // Mock lifestyle images for the feed
 const LIFESTYLE_IMAGES = [
@@ -29,13 +30,26 @@ export default function StyleFeedPage() {
         const q = query(collection(db, "products"), limit(3));
         const snap = await getDocs(q);
         
-        const items = snap.docs.map((doc, idx) => ({
-          id: `post-${idx}`,
-          image: LIFESTYLE_IMAGES[idx] || LIFESTYLE_IMAGES[0],
-          likes: Math.floor(Math.random() * 500) + 50,
-          caption: "Loving this pure silk drape for the summer weddings! ✨ #JPSFashion #OOTD",
-          product: { id: doc.id, ...doc.data() }
-        }));
+        let items = [];
+        
+        if (snap.docs.length === 0) {
+          // Fallback to mock products
+          items = mockProducts.slice(0, 3).map((doc, idx) => ({
+            id: `post-${idx}`,
+            image: LIFESTYLE_IMAGES[idx] || LIFESTYLE_IMAGES[0],
+            likes: Math.floor(Math.random() * 500) + 50,
+            caption: "Loving this pure silk drape for the summer weddings! ✨ #JPSFashion #OOTD",
+            product: doc
+          }));
+        } else {
+          items = snap.docs.map((doc, idx) => ({
+            id: `post-${idx}`,
+            image: LIFESTYLE_IMAGES[idx] || LIFESTYLE_IMAGES[0],
+            likes: Math.floor(Math.random() * 500) + 50,
+            caption: "Loving this pure silk drape for the summer weddings! ✨ #JPSFashion #OOTD",
+            product: { id: doc.id, ...doc.data() }
+          }));
+        }
         
         setFeedItems(items);
       } catch (e) {
@@ -59,7 +73,7 @@ export default function StyleFeedPage() {
     <div className="min-h-screen bg-black">
       <Navbar />
       
-      <main className="max-w-md mx-auto h-screen pt-20 pb-4 overflow-y-scroll snap-y snap-mandatory hide-scrollbar">
+      <main className="max-w-md mx-auto h-screen pt-32 pb-4 overflow-y-scroll snap-y snap-mandatory hide-scrollbar">
         {loading ? (
           <div className="h-full flex items-center justify-center text-white/50">Loading Feed...</div>
         ) : (

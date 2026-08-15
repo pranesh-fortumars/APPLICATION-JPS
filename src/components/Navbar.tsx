@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import Link from "next/link";
-import { Menu, X, Search, ShoppingBag, User as UserIcon, LogOut } from "lucide-react";
+import { Search, ShoppingBag, User as UserIcon, LogOut, Menu, X } from "lucide-react";
 import SmartSearch from "@/components/SmartSearch";
 import { useCartStore } from "@/store/cartStore";
 import { useAuth } from "@/context/AuthContext";
+import CountdownBanner from "@/components/CountdownBanner";
 
 export default function Navbar() {
   const { scrollY } = useScroll();
@@ -32,17 +33,19 @@ export default function Navbar() {
   ];
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-      className={`fixed top-0 left-0 w-full z-50 transition-colors duration-500 ${
-        isScrolled
-          ? "bg-background/80 backdrop-blur-md shadow-sm border-b border-black/5 dark:border-white/5"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
+    <header className="fixed top-0 left-0 w-full z-50 flex flex-col">
+      <CountdownBanner />
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+        className={`w-full transition-colors duration-500 ${
+          isScrolled
+            ? "bg-background/80 backdrop-blur-md shadow-sm border-b border-black/5 dark:border-white/5"
+            : "bg-transparent"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex flex-col items-center justify-center relative w-32 group">
           <span className="font-script text-5xl leading-none tracking-normal text-primary">JPS</span>
@@ -171,6 +174,7 @@ export default function Navbar() {
           ))}
         </motion.div>
       )}
-    </motion.nav>
+      </motion.nav>
+    </header>
   );
 }

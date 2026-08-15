@@ -6,7 +6,7 @@ import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import MiniCart from "@/components/MiniCart";
 import CustomCursor from "@/components/CustomCursor";
 import AIStylist from "@/components/AIStylist";
-import CountdownBanner from "@/components/CountdownBanner";
+
 import { AuthProvider } from "@/context/AuthContext";
 
 const playfair = Cormorant_Garamond({
@@ -62,7 +62,6 @@ export default function RootLayout({
         className={`${inter.variable} ${playfair.variable} ${script.variable} min-h-screen bg-background text-foreground selection:bg-accent selection:text-dark`}
       >
         <AuthProvider>
-          <CountdownBanner />
           <SmoothScroll>
             <CustomCursor />
             {children}

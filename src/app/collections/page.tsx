@@ -6,7 +6,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { Category, Material, Product } from "@/lib/mockData";
+import { Category, Material, Product, mockProducts } from "@/lib/mockData";
 import { Filter, X, Search, Loader2 } from "lucide-react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
@@ -38,7 +38,12 @@ function CollectionsContent() {
         querySnapshot.forEach((doc) => {
           fetchedProducts.push({ id: doc.id, ...doc.data() } as Product);
         });
-        setProducts(fetchedProducts);
+        
+        if (fetchedProducts.length === 0) {
+          setProducts(mockProducts);
+        } else {
+          setProducts(fetchedProducts);
+        }
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -176,7 +181,7 @@ function CollectionsContent() {
   );
 
   return (
-    <main className="flex flex-col min-h-screen bg-background pt-24">
+    <main className="flex flex-col min-h-screen bg-background pt-32">
       <Navbar />
 
       <div className="bg-dark text-secondary py-16 text-center px-6">

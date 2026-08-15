@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { Product } from "@/lib/mockData";
+import { Product, mockProducts } from "@/lib/mockData";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -74,6 +74,34 @@ export default function ProductDetails() {
               .filter(snap => snap.exists())
               .map(snap => ({ id: snap.id, ...snap.data() } as Product));
             setRelatedProds(fetchedRelated);
+          }
+        } else {
+          // Fallback to mock data
+          const mockProd = mockProducts.find(p => p.id === id);
+          if (mockProd) {
+            setProduct(mockProd);
+            
+            // Create mock variants
+            if (mockProd.colorVariants) {
+              const mockVars = mockProd.colorVariants.map((cv, i) => ({
+                id: `var-${i}`,
+                productId: id,
+                sku: `${mockProd.sku}-${cv.name.substring(0,3).toUpperCase()}`,
+                color: cv.name,
+                size: mockProd.width || "Standard",
+                price: mockProd.price,
+                stock: 10,
+                status: "Active"
+              }));
+              setVariants(mockVars);
+              setSelectedVariant(mockVars[0]);
+            }
+            
+            // Set related products from mock
+            if (mockProd.relatedProducts) {
+              const relProds = mockProducts.filter(p => mockProd.relatedProducts.includes(p.id));
+              setRelatedProds(relProds);
+            }
           }
         }
       } catch (error) {
