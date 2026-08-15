@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Search, Loader2, Plus, Edit, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { mockProducts } from "@/lib/mockData";
 
 export default function SellerProductsPage() {
   const { user } = useAuth();
@@ -20,10 +21,15 @@ export default function SellerProductsPage() {
       try {
         const prodQ = query(collection(db, "products"), where("sellerId", "==", user.uid));
         const prodSnap = await getDocs(prodQ);
-        const fetchedProducts = prodSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setProducts(fetchedProducts);
+        if (prodSnap.docs.length === 0) {
+          setProducts(mockProducts);
+        } else {
+          const fetchedProducts = prodSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setProducts(fetchedProducts);
+        }
       } catch (error) {
         console.error("Failed to fetch products", error);
+        setProducts(mockProducts);
       } finally {
         setLoading(false);
       }

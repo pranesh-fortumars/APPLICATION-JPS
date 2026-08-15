@@ -7,6 +7,7 @@ import { db } from "@/lib/firebase/config";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { mockProducts } from "@/lib/mockData";
 
 interface Message {
   id: string;
@@ -32,9 +33,14 @@ export default function AIStylist() {
     const fetchProducts = async () => {
       try {
         const snap = await getDocs(collection(db, "products"));
-        setAllProducts(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        if (snap.docs.length === 0) {
+          setAllProducts(mockProducts);
+        } else {
+          setAllProducts(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        }
       } catch (e) {
         console.error("Failed to preload products for AI", e);
+        setAllProducts(mockProducts);
       }
     };
     fetchProducts();

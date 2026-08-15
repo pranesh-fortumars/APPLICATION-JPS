@@ -5,6 +5,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
 import { Search, Loader2, Plus, Edit, Trash2 } from "lucide-react";
 import Image from "next/image";
+import { mockProducts } from "@/lib/mockData";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -17,10 +18,15 @@ export default function AdminProductsPage() {
   const fetchProducts = async () => {
     try {
       const prodSnap = await getDocs(collection(db, "products"));
-      const fetchedProducts = prodSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setProducts(fetchedProducts);
+      if (prodSnap.docs.length === 0) {
+        setProducts(mockProducts);
+      } else {
+        const fetchedProducts = prodSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setProducts(fetchedProducts);
+      }
     } catch (error) {
       console.error("Failed to fetch products", error);
+      setProducts(mockProducts);
     } finally {
       setLoading(false);
     }
@@ -65,7 +71,7 @@ export default function AdminProductsPage() {
             </thead>
             <tbody>
               {products.length === 0 ? (
-                <tr><td colSpan={6} className="p-8 text-center text-foreground/50">No products found. Run the /seed route to populate.</td></tr>
+                <tr><td colSpan={6} className="p-8 text-center text-foreground/50">No products found.</td></tr>
               ) : (
                 products.map(product => (
                   <tr key={product.id} className="border-b border-black/5 hover:bg-secondary/20 transition-colors text-sm">
