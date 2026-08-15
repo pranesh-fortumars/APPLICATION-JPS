@@ -7,8 +7,10 @@ export default function CustomCursor() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [cursorText, setCursorText] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     const updateMousePosition = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
@@ -44,8 +46,11 @@ export default function CustomCursor() {
     };
   }, []);
 
+  // Hide cursor until mounted to prevent hydration mismatch
+  if (!isMounted) return null;
+
   // Hide cursor on mobile/touch devices
-  if (typeof window !== "undefined" && window.matchMedia("(hover: none)").matches) {
+  if (window.matchMedia("(hover: none)").matches) {
     return null;
   }
 

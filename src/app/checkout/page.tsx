@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCartStore } from "@/store/cartStore";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -18,6 +18,11 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderId, setOrderId] = useState("");
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   
   const [couponInput, setCouponInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<{code: string, discount: number} | null>(null);
@@ -88,6 +93,10 @@ export default function CheckoutPage() {
       setIsProcessing(false);
     }
   };
+
+  if (!isMounted) {
+    return null; // Prevent hydration mismatch
+  }
 
   if (isSuccess) {
     return (

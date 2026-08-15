@@ -16,6 +16,11 @@ export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { toggleCart, totalItems } = useCartStore();
   const { user, logout } = useAuth();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50);
@@ -111,7 +116,7 @@ export default function Navbar() {
             className="relative text-foreground hover:text-accent transition-colors"
           >
             <ShoppingBag size={20} />
-            {totalItems > 0 && (
+            {isMounted && totalItems > 0 && (
               <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
                 {totalItems}
               </span>
@@ -139,7 +144,7 @@ export default function Navbar() {
 
           <button aria-label="Cart" onClick={toggleCart} className="relative">
             <ShoppingBag size={24} />
-            {totalItems > 0 && (
+            {isMounted && totalItems > 0 && (
               <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
                 {totalItems}
               </span>

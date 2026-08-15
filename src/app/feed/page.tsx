@@ -14,7 +14,7 @@ import { mockProducts } from "@/lib/mockData";
 // Mock lifestyle images for the feed
 const LIFESTYLE_IMAGES = [
   "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800",
-  "https://images.unsplash.com/photo-1550614000-4b95dd2475e1?w=800",
+  "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?w=800",
   "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800"
 ];
 
