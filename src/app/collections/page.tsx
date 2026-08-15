@@ -404,17 +404,6 @@ function CollectionsContent() {
   );
 }
 
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Shop All Collections | JPS Fabrics",
-  description: "Browse our extensive catalog of premium fabrics, from luxurious silks and georgettes to everyday cottons. Filter by material, pattern, and color.",
-  openGraph: {
-    title: "Shop All Collections | JPS Fabrics",
-    description: "Browse our extensive catalog of premium fabrics, from luxurious silks to everyday cottons.",
-  }
-};
-
 export default function CollectionsPage() {
   return (
     <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>}>
