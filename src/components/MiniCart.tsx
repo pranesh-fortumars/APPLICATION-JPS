@@ -42,7 +42,24 @@ export default function MiniCart() {
             </div>
 
             {/* Cart Items */}
-            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 hide-scrollbar">
+              {/* Free Shipping Progress */}
+              {items.length > 0 && (
+                <div className="bg-secondary/50 p-4 rounded-sm border border-black/5 mb-2">
+                  <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2 text-center">
+                    {totalPrice >= 5000 
+                      ? "✨ You've unlocked Free Shipping!" 
+                      : `Add ₹${(5000 - totalPrice).toLocaleString()} more for Free Shipping`}
+                  </p>
+                  <div className="w-full bg-black/10 h-1.5 rounded-full overflow-hidden">
+                    <div 
+                      className="bg-primary h-full transition-all duration-500 ease-out"
+                      style={{ width: `${Math.min(100, (totalPrice / 5000) * 100)}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
               {items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-foreground/50 gap-4">
                   <ShoppingBag size={48} strokeWidth={1} />
@@ -52,42 +69,74 @@ export default function MiniCart() {
                   </button>
                 </div>
               ) : (
-                items.map((item) => (
-                  <div key={item.product.id} className="flex gap-4 border-b border-black/5 dark:border-white/5 pb-6">
-                    <div className="relative w-24 h-32 bg-secondary shrink-0 overflow-hidden">
-                      <Image src={item.product.images[0]} alt={item.product.name} fill sizes="96px" className="object-cover" />
-                    </div>
-                    <div className="flex flex-col flex-1 py-1">
-                      <div className="flex justify-between items-start gap-2">
-                        <h3 className="font-serif font-bold text-lg leading-tight line-clamp-2">
-                          {item.product.name}
-                        </h3>
-                        <button 
-                          onClick={() => removeItem(item.product.id)}
-                          className="text-foreground/40 hover:text-red-500 transition-colors"
-                        >
-                          <Trash2 size={16} />
-                        </button>
+                items.map((item) => {
+                  const itemPrice = item.selectedVariant ? item.selectedVariant.price : item.product.price;
+                  const itemId = item.selectedVariant ? item.selectedVariant.sku : item.product.id;
+                  return (
+                    <div key={itemId} className="flex gap-4 border-b border-black/5 dark:border-white/5 pb-6">
+                      <div className="relative w-24 h-32 bg-secondary shrink-0 overflow-hidden">
+                        <Image src={item.product.images[0]} alt={item.product.name} fill sizes="96px" className="object-cover" />
                       </div>
-                      <p className="text-sm text-foreground/60 mt-1">{item.product.material}</p>
-                      
-                        <div className="mt-auto flex items-center justify-between">
-                        <div className="flex items-center border border-black/10">
+                      <div className="flex flex-col flex-1 py-1">
+                        <div className="flex justify-between items-start gap-2">
+                          <h3 className="font-serif font-bold text-lg leading-tight line-clamp-2">
+                            {item.product.name}
+                          </h3>
                           <button 
-                            className="px-3 py-1 hover:bg-black/5"
-                            onClick={() => updateQuantity(item.product.id, Math.max(0.5, item.quantity - 0.5))}
-                          >-</button>
-                          <span className="px-3 py-1 text-sm w-12 text-center">{item.quantity} m</span>
-                          <button 
-                            className="px-3 py-1 hover:bg-black/5"
-                            onClick={() => updateQuantity(item.product.id, item.quantity + 0.5)}
-                          >+</button>
+                            onClick={() => removeItem(itemId)}
+                            className="text-foreground/40 hover:text-red-500 transition-colors"
+                          >
+                            <Trash2 size={16} />
+                          </button>
                         </div>
-                        <span className="font-semibold text-primary">₹{item.product.price * item.quantity}</span>
+                        <p className="text-sm text-foreground/60 mt-1">
+                          {item.selectedVariant ? `Color: ${item.selectedVariant.color}` : item.product.material}
+                        </p>
+                        
+                        <div className="mt-auto flex items-center justify-between">
+                          <div className="flex items-center border border-black/10">
+                            <button 
+                              className="px-3 py-1 hover:bg-black/5 disabled:opacity-30 disabled:cursor-not-allowed"
+                              disabled={item.quantity <= 1}
+                              onClick={() => updateQuantity(itemId, Math.max(1.0, item.quantity - 0.5))}
+                            >-</button>
+                            <span className="px-3 py-1 text-sm w-12 text-center font-bold">{item.quantity.toFixed(1)}m</span>
+                            <button 
+                              className="px-3 py-1 hover:bg-black/5"
+                              onClick={() => updateQuantity(itemId, item.quantity + 0.5)}
+                            >+</button>
+                          </div>
+                          <span className="font-semibold text-primary">₹{(itemPrice * item.quantity).toLocaleString()}</span>
+                        </div>
                       </div>
+                    </div>
+                  );
+                })
+              )}
+
+              {/* Cross-Sells (Static Mock for UX) */}
+              {items.length > 0 && (
+                <div className="mt-4 border-t border-black/5 pt-6">
+                  <p className="text-xs font-bold uppercase tracking-widest text-primary/70 mb-4">You May Also Like</p>
+                  <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-4">
+                    {/* Mock Item 1 */}
+                    <div className="min-w-[120px] flex flex-col gap-2">
+                      <div className="relative aspect-[3/4] bg-secondary w-full">
+                        <Image src="https://images.unsplash.com/photo-1583391733958-d25e07fac0ec?w=400" alt="Lining" fill className="object-cover" />
+                      </div>
+                      <p className="text-xs font-bold font-serif line-clamp-1">Premium Crepe Lining</p>
+                      <p className="text-xs text-accent">₹150 /m</p>
+                    </div>
+                    {/* Mock Item 2 */}
+                    <div className="min-w-[120px] flex flex-col gap-2">
+                      <div className="relative aspect-[3/4] bg-secondary w-full">
+                        <Image src="https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?w=400" alt="Fall" fill className="object-cover" />
+                      </div>
+                      <p className="text-xs font-bold font-serif line-clamp-1">Matching Saree Fall</p>
+                      <p className="text-xs text-accent">₹80 /pc</p>
                     </div>
                   </div>
-                ))
+                </div>
               )}
             </div>
 

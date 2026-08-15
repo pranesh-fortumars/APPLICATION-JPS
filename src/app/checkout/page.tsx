@@ -309,25 +309,27 @@ export default function CheckoutPage() {
               </div>
 
               <div className="space-y-3 text-sm border-t border-black/10 pt-6 mb-6">
-                <div className="flex justify-between">
+                <div className="flex justify-between text-sm">
                   <span className="text-foreground/70">Subtotal</span>
                   <span className="font-medium">₹{totalPrice}</span>
                 </div>
                 {appliedCoupon && (
-                  <div className="flex justify-between text-green-700 font-bold">
+                  <div className="flex justify-between text-green-700 font-bold text-sm">
                     <span>Discount ({appliedCoupon.code})</span>
                     <span>-₹{discountAmount}</span>
                   </div>
                 )}
-                <div className="flex justify-between">
+                <div className="flex justify-between text-sm">
                   <span className="text-foreground/70">Shipping</span>
-                  <span className="font-medium text-accent">Free</span>
+                  <span className={`font-medium ${totalPrice >= 5000 ? 'text-accent' : ''}`}>
+                    {totalPrice >= 5000 ? 'Free' : '₹150'}
+                  </span>
                 </div>
               </div>
 
               <div className="flex justify-between items-center text-lg font-bold border-t border-black/10 pt-6">
                 <span className="font-serif">Total</span>
-                <span className="text-primary">₹{finalPrice}</span>
+                <span className="text-primary">₹{totalPrice >= 5000 ? finalPrice : finalPrice + 150}</span>
               </div>
             </div>
           </div>
