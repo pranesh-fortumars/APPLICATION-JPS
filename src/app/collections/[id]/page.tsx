@@ -46,6 +46,8 @@ export default function ProductDetails() {
   const [isSwatchModalOpen, setIsSwatchModalOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [quantity, setQuantity] = useState<number>(1.0);
+  const [activeTab, setActiveTab] = useState<string>("Description");
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -272,19 +274,48 @@ export default function ProductDetails() {
               </div>
             )}
 
+            {/* Quantity Selector */}
+            <div className="mb-8">
+              <p className="text-xs font-bold uppercase tracking-widest text-primary/70 mb-3">Length (Meters)</p>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center border border-black/10 rounded-sm">
+                  <button 
+                    onClick={() => setQuantity(Math.max(1, quantity - 0.5))}
+                    disabled={quantity <= 1}
+                    className="w-10 h-10 flex items-center justify-center text-primary hover:bg-black/5 disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-bold"
+                  >
+                    -
+                  </button>
+                  <div className="w-16 h-10 flex items-center justify-center font-bold text-lg border-x border-black/10">
+                    {quantity.toFixed(1)}
+                  </div>
+                  <button 
+                    onClick={() => setQuantity(quantity + 0.5)}
+                    disabled={selectedVariant && selectedVariant.stock < quantity + 0.5}
+                    className="w-10 h-10 flex items-center justify-center text-primary hover:bg-black/5 disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-bold"
+                  >
+                    +
+                  </button>
+                </div>
+                <span className="text-xs text-primary/50 font-medium">Minimum order: 1 meter</span>
+              </div>
+            </div>
+
             {/* Actions */}
             <div className="flex flex-col gap-4 mb-8">
               <button 
                 disabled={selectedVariant?.stock === 0}
                 onClick={() => {
                   if (selectedVariant) {
-                     addItem({ product, quantity: 1, selectedVariant }); // Assuming we update cartStore to handle selectedVariant
+                     addItem({ product, quantity: quantity, selectedVariant });
+                  } else {
+                     addItem({ product, quantity: quantity });
                   }
                 }}
                 className="w-full py-4 bg-primary text-white font-sans font-semibold uppercase tracking-widest text-sm hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 shadow-ambient disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ShoppingBag size={18} />
-                {selectedVariant?.stock === 0 ? "Out of Stock" : "Add to Cart"}
+                {selectedVariant?.stock === 0 ? "Out of Stock" : `Add ${quantity.toFixed(1)}m to Cart - ₹${((selectedVariant ? selectedVariant.price : product.price) * quantity).toLocaleString()}`}
               </button>
               <div className="flex gap-4">
                 <button 
@@ -300,7 +331,7 @@ export default function ProductDetails() {
                   className="flex-1 py-4 bg-[#25D366] text-white font-sans font-semibold uppercase tracking-widest text-sm hover:bg-[#20bd5a] transition-colors flex items-center justify-center gap-2"
                 >
                   <MessageCircle size={18} />
-                  WhatsApp Enquiry
+                  WhatsApp
                 </Link>
                 <button 
                   onClick={() => setIsSwatchModalOpen(true)}
@@ -312,57 +343,95 @@ export default function ProductDetails() {
               </div>
             </div>
 
-            {/* Fabric Intelligence & Details */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-8 border-t border-black/5 pt-8">
-              <div>
-                <h3 className="font-serif font-bold text-xl mb-4">Fabric Details</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-primary/60 font-semibold uppercase tracking-widest text-xs">Material</span>
-                    <span className="text-primary font-medium">{product.material}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-primary/60 font-semibold uppercase tracking-widest text-xs">Width</span>
-                    <span className="text-primary font-medium">{product.width}</span>
-                  </div>
-                  {product.gsm && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-primary/60 font-semibold uppercase tracking-widest text-xs">Weight</span>
-                      <span className="text-primary font-medium">{product.gsm} GSM</span>
-                    </div>
-                  )}
-                  {product.bestFor && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-primary/60 font-semibold uppercase tracking-widest text-xs">Best For</span>
-                      <span className="text-primary font-medium text-right max-w-[150px]">{product.bestFor.join(", ")}</span>
-                    </div>
-                  )}
-                </div>
+            {/* Information Tabs */}
+            <div className="mt-8 border-t border-black/5 pt-8">
+              <div className="flex border-b border-black/5 mb-6 overflow-x-auto hide-scrollbar">
+                {["Description", "Details", "Care", "Delivery"].map(tab => (
+                  <button 
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-4 py-3 text-sm font-bold uppercase tracking-widest whitespace-nowrap border-b-2 transition-colors ${activeTab === tab ? 'border-primary text-primary' : 'border-transparent text-primary/40 hover:text-primary/70'}`}
+                  >
+                    {tab}
+                  </button>
+                ))}
               </div>
 
-              {product.fabricSpecs && (
-                <div>
-                  <h3 className="font-serif font-bold text-xl mb-4">Characteristics</h3>
-                  <div className="space-y-1">
-                    <DotRating label="Softness" rating={product.fabricSpecs.softness} />
-                    <DotRating label="Drape" rating={product.fabricSpecs.drape} />
-                    <DotRating label="Weight" rating={product.fabricSpecs.weight} />
-                    <DotRating label="Transparency" rating={product.fabricSpecs.transparency} />
-                    <DotRating label="Sheen" rating={product.fabricSpecs.sheen} />
-                  </div>
-                </div>
-              )}
-            </div>
+              <div className="min-h-[200px] prose prose-sm prose-p:font-light prose-p:text-primary/80">
+                {activeTab === "Description" && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <p>{product.description}</p>
+                    {product.bestFor && (
+                      <div className="mt-4">
+                        <span className="font-bold uppercase tracking-widest text-xs text-primary mb-2 block">Best For</span>
+                        <p>{product.bestFor.join(", ")}</p>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+                
+                {activeTab === "Details" && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                      <h4 className="font-serif font-bold text-lg mb-3 mt-0 text-primary">Specifications</h4>
+                      <div className="space-y-3">
+                        <div className="flex justify-between border-b border-black/5 pb-2"><span className="text-primary/60 font-medium">Material</span><span className="font-bold text-primary">{product.material}</span></div>
+                        <div className="flex justify-between border-b border-black/5 pb-2"><span className="text-primary/60 font-medium">Width</span><span className="font-bold text-primary">{product.width}</span></div>
+                        {product.gsm && <div className="flex justify-between border-b border-black/5 pb-2"><span className="text-primary/60 font-medium">Weight</span><span className="font-bold text-primary">{product.gsm} GSM</span></div>}
+                      </div>
+                    </div>
+                    {product.fabricSpecs && (
+                      <div>
+                        <h4 className="font-serif font-bold text-lg mb-3 mt-0 text-primary">Characteristics</h4>
+                        <div className="space-y-1">
+                          <DotRating label="Softness" rating={product.fabricSpecs.softness} />
+                          <DotRating label="Drape" rating={product.fabricSpecs.drape} />
+                          <DotRating label="Weight" rating={product.fabricSpecs.weight} />
+                          <DotRating label="Transparency" rating={product.fabricSpecs.transparency} />
+                          <DotRating label="Sheen" rating={product.fabricSpecs.sheen} />
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
 
-            {/* Description & Care */}
-            <div className="mt-8 border-t border-black/5 pt-8 prose prose-p:font-light prose-p:text-primary/80">
-              <p>{product.description}</p>
-              {product.careInstructions && (
-                <div className="mt-6 p-4 bg-secondary rounded-sm">
-                  <span className="block text-xs font-bold uppercase tracking-widest mb-2 text-primary">Care Instructions</span>
-                  <p className="text-sm m-0">{product.careInstructions}</p>
-                </div>
-              )}
+                {activeTab === "Care" && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <div className="bg-secondary p-6 rounded-sm">
+                      <h4 className="font-serif font-bold text-lg mb-2 mt-0 text-primary">Care Instructions</h4>
+                      <p className="m-0 text-sm font-medium">{product.careInstructions || "Dry clean only recommended for premium fabrics to maintain texture and longevity."}</p>
+                    </div>
+                  </motion.div>
+                )}
+
+                {activeTab === "Delivery" && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <ul className="space-y-4 list-none pl-0">
+                      <li className="flex gap-3">
+                        <ShieldCheck className="text-accent shrink-0" size={20} />
+                        <div>
+                          <strong className="block text-primary text-sm uppercase tracking-widest font-bold">Standard Delivery</strong>
+                          <span className="text-primary/70 text-sm">3-5 business days across India. Free shipping on orders above ₹5000.</span>
+                        </div>
+                      </li>
+                      <li className="flex gap-3">
+                        <Weight className="text-accent shrink-0" size={20} />
+                        <div>
+                          <strong className="block text-primary text-sm uppercase tracking-widest font-bold">Express Shipping</strong>
+                          <span className="text-primary/70 text-sm">1-2 business days to metro cities. Additional charges apply.</span>
+                        </div>
+                      </li>
+                      <li className="flex gap-3">
+                        <Ruler className="text-accent shrink-0" size={20} />
+                        <div>
+                          <strong className="block text-primary text-sm uppercase tracking-widest font-bold">Cut to Order</strong>
+                          <span className="text-primary/70 text-sm">All fabrics are strictly cut to your ordered specifications. Returns are only accepted for manufacturing defects.</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </motion.div>
+                )}
+              </div>
             </div>
 
             {/* Product Reviews */}
