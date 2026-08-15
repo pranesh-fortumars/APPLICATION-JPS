@@ -5,6 +5,7 @@ import InteractiveCategories from "@/components/InteractiveCategories";
 import AboutBoutique from "@/components/AboutBoutique";
 import FeatureJourney from "@/components/FeatureJourney";
 import Collections from "@/components/Collections";
+import ProductCarousel from "@/components/ProductCarousel";
 import VideoShowcase from "@/components/VideoShowcase";
 import Testimonials from "@/components/Testimonials";
 import USP from "@/components/USP";
@@ -17,12 +18,15 @@ export default function Home() {
     <main className="flex min-h-screen flex-col bg-shimmer">
       <Navbar />
       <Hero />
-      <Stats />
+      <ProductCarousel title="New Arrivals" subtitle="Just Dropped" />
       <InteractiveCategories />
+      <Stats />
+      <ProductCarousel title="Best Sellers" subtitle="Customer Favorites" dark />
       <AboutBoutique />
       <FeatureJourney />
       <VideoShowcase />
       <Collections />
+      <ProductCarousel title="Trending Now" subtitle="Most Wanted" />
       <Testimonials />
       <USP />
       <ReachOut />

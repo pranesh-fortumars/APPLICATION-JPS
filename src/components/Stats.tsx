@@ -3,40 +3,14 @@
 import { motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-function Counter({ from, to, duration = 2, suffix = "" }: { from: number, to: number, duration?: number, suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
-  const [count, setCount] = useState(from);
 
-  useEffect(() => {
-    if (!inView) return;
-    
-    let startTime: number;
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
-      
-      // Easing function (easeOutQuart)
-      const easeProgress = 1 - Math.pow(1 - progress, 4);
-      setCount(Math.floor(easeProgress * (to - from) + from));
-      
-      if (progress < 1) {
-        requestAnimationFrame(step);
-      }
-    };
-    
-    requestAnimationFrame(step);
-  }, [inView, from, to, duration]);
-
-  return <span ref={ref}>{count}{suffix}</span>;
-}
 
 export default function Stats() {
   const stats = [
-    { label: "Premium Fabrics", value: 500, suffix: "+" },
-    { label: "Years Experience", value: 15, suffix: "+" },
-    { label: "Happy Customers", value: 10000, suffix: "+" },
-    { label: "Quality Assured", value: 100, suffix: "%" },
+    { label: "Premium Silks & Cottons", value: "Curated Fabrics" },
+    { label: "Heritage Craftsmanship", value: "Master Weavers" },
+    { label: "Tailored For You", value: "Bespoke Service" },
+    { label: "Guaranteed Authenticity", value: "100% Pure" },
   ];
 
   return (
@@ -55,10 +29,10 @@ export default function Stats() {
               transition={{ duration: 0.8, delay: index * 0.1 }}
               className="flex flex-col items-center justify-center space-y-4"
             >
-              <h3 className="text-6xl md:text-7xl lg:text-8xl font-serif text-accent font-bold drop-shadow-sm">
-                <Counter from={0} to={stat.value} suffix={stat.suffix} duration={2.5} />
+              <h3 className="text-3xl md:text-4xl lg:text-5xl font-serif text-accent font-bold drop-shadow-sm leading-tight text-balance">
+                {stat.value}
               </h3>
-              <p className="text-base md:text-lg tracking-widest uppercase font-sans font-semibold text-primary/70">
+              <p className="text-xs md:text-sm tracking-widest uppercase font-sans font-semibold text-primary/70 max-w-[200px]">
                 {stat.label}
               </p>
             </motion.div>
