@@ -13,6 +13,17 @@ import ReachOut from "@/components/ReachOut";
 import CommunityCTA from "@/components/CommunityCTA";
 import Footer from "@/components/Footer";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "JPS Fabrics | Premium Luxury Boutique",
+  description: "Shop the finest collection of luxury fabrics, unstitched suits, and bridal couture at JPS Fabrics. Premium quality, exquisite designs.",
+  openGraph: {
+    title: "JPS Fabrics | Premium Luxury Boutique",
+    description: "Shop the finest collection of luxury fabrics, unstitched suits, and bridal couture at JPS Fabrics.",
+  }
+};
+
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col bg-shimmer">
