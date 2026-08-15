@@ -10,6 +10,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "@/store/cartStore";
 import { mockProducts } from "@/lib/mockData";
+import { ChevronLeft } from "lucide-react";
 
 // Mock lifestyle images for the feed
 const LIFESTYLE_IMAGES = [
@@ -22,6 +23,8 @@ export default function StyleFeedPage() {
   const [feedItems, setFeedItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeProduct, setActiveProduct] = useState<any | null>(null);
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+  const [showLikeAnimation, setShowLikeAnimation] = useState<string | null>(null);
   const addItem = useCartStore(state => state.addItem);
 
   useEffect(() => {
@@ -60,7 +63,8 @@ export default function StyleFeedPage() {
           image: LIFESTYLE_IMAGES[idx] || LIFESTYLE_IMAGES[0],
           likes: Math.floor(Math.random() * 500) + 50,
           caption: "Loving this pure silk drape for the summer weddings! ✨ #JPSFashion #OOTD",
-          product: doc
+          product: doc,
+          relatedProducts: mockProducts.filter(p => p.id !== doc.id).slice(0, 2)
         }));
         setFeedItems(mockItems);
       } finally {
@@ -78,51 +82,123 @@ export default function StyleFeedPage() {
     }
   };
 
+  const handleDoubleTap = (postId: string) => {
+    toggleLike(postId);
+    setShowLikeAnimation(postId);
+    setTimeout(() => setShowLikeAnimation(null), 1000);
+  };
+
+  const toggleLike = (postId: string) => {
+    setLikedPosts(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(postId)) {
+        newSet.delete(postId);
+      } else {
+        newSet.add(postId);
+      }
+      return newSet;
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-black">
-      <Navbar />
+    <div className="fixed inset-0 bg-black z-[100]">
+      {/* Minimalist Top Nav for Feed */}
+      <div className="absolute top-0 left-0 w-full p-6 z-[60] flex justify-between items-center bg-gradient-to-b from-black/60 to-transparent">
+        <Link href="/" className="text-white hover:text-white/80 transition-colors">
+          <ChevronLeft size={28} />
+        </Link>
+        <h1 className="text-white font-serif font-bold text-xl tracking-widest uppercase">Style Feed</h1>
+        <div className="w-7" /> {/* Spacer */}
+      </div>
       
-      <main className="max-w-md mx-auto h-screen pt-32 pb-4 overflow-y-scroll snap-y snap-mandatory hide-scrollbar">
+      <main className="w-full h-full md:max-w-md md:mx-auto overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative bg-black">
         {loading ? (
           <div className="h-full flex items-center justify-center text-white/50">Loading Feed...</div>
         ) : (
-          feedItems.map((post) => (
-            <div key={post.id} className="relative w-full h-[calc(100vh-80px)] snap-start shrink-0 bg-secondary mb-4 rounded-3xl overflow-hidden">
-              
-              {/* Main Image */}
-              <Image src={post.image} alt="Lifestyle" fill className="object-cover" />
-              
-              {/* Overlay Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
-
-              {/* Tag / Shoppable Link */}
-              <button 
-                onClick={() => setActiveProduct(post.product)}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm text-dark px-4 py-2 rounded-full font-bold text-xs uppercase tracking-widest shadow-xl flex items-center gap-2 hover:scale-105 transition-transform"
-              >
-                <ShoppingBag size={14} /> Shop The Look
-              </button>
-
-              {/* Post Info (Bottom) */}
-              <div className="absolute bottom-0 left-0 w-full p-6 text-white">
-                <p className="font-bold text-sm mb-2">@jps_studios</p>
-                <p className="text-sm text-white/80 line-clamp-2">{post.caption}</p>
+          feedItems.map((post) => {
+            const isLiked = likedPosts.has(post.id);
+            return (
+              <div key={post.id} className="relative w-full h-full snap-start shrink-0 overflow-hidden" onDoubleClick={() => handleDoubleTap(post.id)}>
                 
-                {/* Actions */}
-                <div className="flex items-center gap-6 mt-4">
-                  <button className="flex items-center gap-2 hover:text-primary transition-colors">
-                    <Heart size={24} /> <span className="text-xs font-bold">{post.likes}</span>
-                  </button>
-                  <button className="flex items-center gap-2 hover:text-white/80 transition-colors">
-                    <MessageCircle size={24} />
-                  </button>
-                  <button className="flex items-center gap-2 hover:text-white/80 transition-colors">
-                    <Share2 size={24} />
+                {/* Main Image */}
+                <Image src={post.image} alt="Lifestyle" fill className="object-cover" priority />
+                
+                {/* Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
+
+                {/* Double Tap Like Animation */}
+                <AnimatePresence>
+                  {showLikeAnimation === post.id && (
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1.5, opacity: 1 }}
+                      exit={{ scale: 2, opacity: 0 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white pointer-events-none drop-shadow-2xl"
+                    >
+                      <Heart size={100} className="fill-white" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Shoppable Tags */}
+                <div className="absolute top-[40%] right-6 flex flex-col gap-4">
+                  <button 
+                    onClick={() => setActiveProduct(post.product)}
+                    className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex flex-col items-center justify-center text-white hover:bg-white/40 transition-colors border border-white/20 shadow-lg"
+                  >
+                    <ShoppingBag size={20} />
                   </button>
                 </div>
+
+                {/* Post Info (Bottom) */}
+                <div className="absolute bottom-0 left-0 w-full p-6 pb-12 flex items-end justify-between">
+                  <div className="flex-1 pr-12 text-white">
+                    <p className="font-bold text-lg mb-2 flex items-center gap-2">
+                      @jps_studios <span className="text-[10px] bg-primary text-white px-2 py-0.5 rounded-sm uppercase tracking-widest font-bold">Follow</span>
+                    </p>
+                    <p className="text-sm text-white/90 font-light mb-4">{post.caption}</p>
+                    
+                    {/* Featured Product Banner */}
+                    <button 
+                      onClick={() => setActiveProduct(post.product)}
+                      className="w-full max-w-[280px] bg-white/10 backdrop-blur-md border border-white/20 p-3 rounded-xl flex items-center gap-4 hover:bg-white/20 transition-colors text-left"
+                    >
+                      <div className="w-12 h-12 bg-secondary rounded-lg overflow-hidden shrink-0 relative">
+                        {post.product.images?.[0] && <Image src={post.product.images[0]} alt="Product" fill className="object-cover" />}
+                      </div>
+                      <div className="flex-1 overflow-hidden">
+                        <p className="text-white font-bold text-sm truncate">{post.product.name}</p>
+                        <p className="text-white/70 text-xs">₹{post.product.price} • Shop Now</p>
+                      </div>
+                    </button>
+                  </div>
+                  
+                  {/* Right Side Actions */}
+                  <div className="flex flex-col items-center gap-6 text-white pb-4">
+                    <button onClick={() => toggleLike(post.id)} className="flex flex-col items-center gap-1 hover:scale-110 transition-transform">
+                      <div className="w-10 h-10 bg-black/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/10">
+                        <Heart size={22} className={isLiked ? "fill-red-500 text-red-500" : ""} />
+                      </div>
+                      <span className="text-xs font-bold">{isLiked ? post.likes + 1 : post.likes}</span>
+                    </button>
+                    <button className="flex flex-col items-center gap-1 hover:scale-110 transition-transform">
+                      <div className="w-10 h-10 bg-black/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/10">
+                        <MessageCircle size={22} />
+                      </div>
+                      <span className="text-xs font-bold">12</span>
+                    </button>
+                    <button className="flex flex-col items-center gap-1 hover:scale-110 transition-transform">
+                      <div className="w-10 h-10 bg-black/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/10">
+                        <Share2 size={22} />
+                      </div>
+                      <span className="text-xs font-bold">Share</span>
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </main>
 
@@ -133,35 +209,54 @@ export default function StyleFeedPage() {
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setActiveProduct(null)}
-              className="fixed inset-0 bg-black/60 z-50 backdrop-blur-sm"
+              className="fixed inset-0 bg-black/60 z-[110] backdrop-blur-sm"
             />
             <motion.div
               initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
-              className="fixed bottom-0 left-0 w-full max-w-md mx-auto right-0 bg-white rounded-t-3xl p-6 z-50 shadow-2xl"
+              className="fixed bottom-0 left-0 w-full max-w-md mx-auto right-0 bg-white rounded-t-3xl p-6 z-[120] shadow-2xl"
             >
-              <button onClick={() => setActiveProduct(null)} className="absolute top-4 right-4 p-2 text-foreground/40 hover:text-dark">
+              <div className="w-12 h-1.5 bg-black/10 rounded-full mx-auto mb-6" />
+              
+              <button onClick={() => setActiveProduct(null)} className="absolute top-6 right-6 p-2 bg-secondary rounded-full text-foreground/40 hover:text-dark transition-colors">
                 <X size={20} />
               </button>
               
-              <h3 className="font-serif text-xl font-bold mb-4">Shop This Look</h3>
+              <h3 className="font-serif text-xl font-bold mb-6">Shop The Look</h3>
               
-              <div className="flex gap-4 mb-6">
-                <div className="w-24 h-32 relative bg-secondary rounded-sm overflow-hidden shrink-0">
+              <div className="flex gap-4 mb-6 p-3 border border-primary/20 bg-primary/5 rounded-xl">
+                <div className="w-24 h-32 relative bg-secondary rounded-lg overflow-hidden shrink-0 shadow-sm">
                   {activeProduct.images?.[0] && <Image src={activeProduct.images[0]} alt={activeProduct.name} fill className="object-cover" />}
                 </div>
-                <div className="flex flex-col justify-center">
-                  <p className="font-serif font-bold text-lg leading-tight mb-1">{activeProduct.name}</p>
+                <div className="flex flex-col justify-center flex-1">
+                  <p className="font-serif font-bold text-lg leading-tight mb-1 line-clamp-2">{activeProduct.name}</p>
                   <p className="text-xs text-foreground/50 uppercase tracking-widest mb-2">{activeProduct.material}</p>
-                  <p className="font-bold font-sans">₹{activeProduct.price}</p>
+                  <p className="font-bold font-sans text-primary text-xl">₹{activeProduct.price}</p>
                 </div>
               </div>
 
+              {activeProduct.relatedProducts && activeProduct.relatedProducts.length > 0 && (
+                <div className="mb-6">
+                  <p className="text-xs font-bold uppercase tracking-widest text-foreground/50 mb-3">Complete The Look</p>
+                  <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
+                    {activeProduct.relatedProducts.map((p: any) => (
+                      <Link href={`/collections/${p.id}`} key={p.id} className="w-24 shrink-0 group">
+                        <div className="w-full h-24 bg-secondary rounded-lg overflow-hidden relative mb-2 border border-black/5 group-hover:border-primary transition-colors">
+                          {p.images?.[0] && <Image src={p.images[0]} alt={p.name} fill className="object-cover" />}
+                        </div>
+                        <p className="text-[10px] font-bold line-clamp-1 group-hover:text-primary transition-colors">{p.name}</p>
+                        <p className="text-[10px] text-foreground/60">₹{p.price}</p>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="flex gap-3">
-                <Link href={`/collections/${activeProduct.id}`} className="flex-1 text-center py-4 border border-black/10 font-bold uppercase tracking-widest text-xs hover:bg-secondary transition-colors">
+                <Link href={`/collections/${activeProduct.id}`} className="flex-1 text-center py-4 border border-black/10 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-secondary transition-colors">
                   View Details
                 </Link>
-                <button onClick={handleAddToCart} className="flex-[2] bg-primary text-white py-4 font-bold uppercase tracking-widest text-xs hover:bg-primary/90 transition-colors flex justify-center items-center gap-2">
-                  <ShoppingBag size={14} /> Add to Cart
+                <button onClick={handleAddToCart} className="flex-[2] bg-primary text-white rounded-xl py-4 font-bold uppercase tracking-widest text-xs hover:bg-primary/90 transition-colors flex justify-center items-center gap-2 shadow-lg shadow-primary/30">
+                  <ShoppingBag size={16} /> Add to Cart
                 </button>
               </div>
             </motion.div>
