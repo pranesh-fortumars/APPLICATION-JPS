@@ -54,6 +54,15 @@ export default function StyleFeedPage() {
         setFeedItems(items);
       } catch (e) {
         console.error("Failed to fetch feed", e);
+        // Fallback to mock products on error
+        const mockItems = mockProducts.slice(0, 3).map((doc, idx) => ({
+          id: `post-${idx}`,
+          image: LIFESTYLE_IMAGES[idx] || LIFESTYLE_IMAGES[0],
+          likes: Math.floor(Math.random() * 500) + 50,
+          caption: "Loving this pure silk drape for the summer weddings! ✨ #JPSFashion #OOTD",
+          product: doc
+        }));
+        setFeedItems(mockItems);
       } finally {
         setLoading(false);
       }
